@@ -50,6 +50,12 @@ public class CharBox
 		
 	}
 	
+	public String getText() {
+		
+		return charLabel.getText();
+		
+	}
+	
 	public void highlight() {
 		charLabel.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
 	}
@@ -60,7 +66,7 @@ public class CharBox
 	
 	public void checkCorrectness(int position, String correctWord)
 	{
-		
+				
 		String character = charLabel.getText();
 		
 		if(correctWord.contains(character))

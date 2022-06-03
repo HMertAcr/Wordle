@@ -10,11 +10,12 @@ public class Source {
 
 	public static void main(String[] args) {
 		
-		
 		JFrame appWindow = new JFrame();
 		appWindow.setLayout(new GridLayout(1,1));
 		
-		WordleGui newGame1 = new WordleGui();
+		wordleDictionary Dictionary = new wordleDictionary("dictionary.txt");
+		
+		WordleGui newGame1 = new WordleGui(Dictionary);
 		
 		appWindow.add(newGame1.mainWordleBox);
 		

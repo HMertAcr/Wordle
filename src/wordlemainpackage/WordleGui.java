@@ -12,20 +12,23 @@ public class WordleGui
 
 {
 	public
+	wordleDictionary Dictionary;
 	String correctAnswer;
 	CharBox wordArea[][];
 	JPanel mainWordleBox;
 	JPanel wordleQuestionArea;
 	JPanel draggableKeyboardBox;
+	KeyListener keyListener;
 	int positionInWord;
 	int enteredCharactersInWord;
 	int numOfTries;
 
-	public WordleGui()
+	public WordleGui(wordleDictionary Dictionary)
 	{
+		this.Dictionary = Dictionary;
+		correctAnswer = this.Dictionary.random();
 		
-		//get random answer from file
-		correctAnswer = "SHORT";
+		System.out.println(correctAnswer);
 		
 		enteredCharactersInWord = 0;
 		positionInWord = 0;
@@ -50,6 +53,106 @@ public class WordleGui
 			}
 		}
 		wordArea[0][0].highlight();
+	}
+	
+	public void addKeyListener()
+	{
+		
+		keyListener = new KeyListener() {
+            public void keyPressed(KeyEvent event) {
+            	if(event.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            		if(enteredCharactersInWord>0) {
+            			
+            			wordArea[numOfTries][enteredCharactersInWord-1].changeBoxText("");
+            			enteredCharactersInWord--;
+            			
+            			if(enteredCharactersInWord<4) {
+            				wordArea[numOfTries][positionInWord].unHighlight();
+            				positionInWord--;
+            				wordArea[numOfTries][positionInWord].highlight();
+            			}
+            		}
+            		return;
+            	}
+            	if(event.getKeyCode() == KeyEvent.VK_ENTER) {
+            		if(enteredCharactersInWord == 5) {
+            			
+            			String enteredWord = "";
+            			
+            			for(int i=0; i<5; i++) {
+            				enteredWord += wordArea[numOfTries][i].getText();
+            			}
+            			if(Dictionary.contains(enteredWord)) {
+            				
+	            			for(int i=0; i<5; i++) {
+	            				wordArea[numOfTries][i].checkCorrectness(i, correctAnswer);
+	            			}
+	            			
+		            		if(numOfTries<4) {
+
+		            			if(enteredWord.equals(correctAnswer)) {
+			            			wordArea[numOfTries][positionInWord].unHighlight();
+			            			System.out.print("you won");
+			            			removeKeyListener();
+			            			
+		            			}else {
+		            				
+		            				wordArea[numOfTries][positionInWord].unHighlight();
+			            			numOfTries++;
+			            			positionInWord=0;
+			            			enteredCharactersInWord=0;
+		                			wordArea[numOfTries][positionInWord].highlight();
+		                			
+		            			}
+
+		            		}else{
+		            			wordArea[numOfTries][positionInWord].unHighlight();
+		            			System.out.println("you lost");
+		            			removeKeyListener();
+		            		}
+            				
+            			}
+
+            		}
+            		return;
+            	}
+            	
+            	if(KeyEvent.getKeyText(event.getKeyCode()).length() == 1)
+            	{
+		            wordArea[numOfTries][positionInWord].changeBoxText("" + Character.toUpperCase(event.getKeyChar()));
+		            
+		            if(enteredCharactersInWord<5) {
+            			enteredCharactersInWord++;
+		            }
+		            
+        			if(positionInWord<4) {
+        				positionInWord++;
+        				wordArea[numOfTries][positionInWord-1].unHighlight();
+            			wordArea[numOfTries][positionInWord].highlight();
+        			}
+        			
+            	}
+            	
+            }
+            
+            public void keyReleased(KeyEvent event) {
+            	//**//
+            }
+            public void keyTyped(KeyEvent event) {
+            	//**//
+            }
+        };
+        
+        mainWordleBox.setFocusable(true);
+        mainWordleBox.requestFocus();
+		mainWordleBox.addKeyListener(keyListener);
+		
+	}
+	
+	public void removeKeyListener()
+	{
+		mainWordleBox.setFocusable(false);
+		mainWordleBox.removeKeyListener(keyListener);
 	}
 	
 	public void startGui(boolean adddraggableKeyboardBox)
@@ -92,95 +195,7 @@ public class WordleGui
 			mainWordleBox.setVisible(true);
 			wordleQuestionArea.setVisible(true);
 						
-			KeyListener keyListener = new KeyListener() {
-	            public void keyPressed(KeyEvent event) {
-	            	if(event.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-	            		if(enteredCharactersInWord>0) {
-	            			
-	            			wordArea[numOfTries][enteredCharactersInWord-1].changeBoxText("");
-	            			enteredCharactersInWord--;
-	            			
-	            			if(enteredCharactersInWord<4) {
-	            				wordArea[numOfTries][positionInWord].unHighlight();
-	            				positionInWord--;
-                				wordArea[numOfTries][positionInWord].highlight();
-	            			}
-	            		}
-	            		return;
-	            	}
-	            	if(event.getKeyCode() == KeyEvent.VK_ENTER) {
-	            		if(enteredCharactersInWord == 5) {
-	            			
-	            			for(int i=0; i<5; i++) {
-	            				wordArea[numOfTries][i].checkCorrectness(i, correctAnswer);
-	            			}
-	            			
-		            		if(numOfTries<4) {
-		            			
-		            			//checkCorrectness
-		            			
-	            				wordArea[numOfTries][positionInWord].unHighlight();
-		            			numOfTries++;
-		            			positionInWord=0;
-		            			enteredCharactersInWord=0;
-	                			wordArea[numOfTries][positionInWord].highlight();
-
-		            		}
-	            		}
-	            		return;
-	            	}
-	            	/*
-	            	if(event.getKeyCode() == KeyEvent.VK_LEFT) {
-	            		if(positionInWord>0) {
-	            			wordArea[numOfTries][positionInWord].unHighlight();
-		            		positionInWord--;
-		            		wordArea[numOfTries][positionInWord].highlight();
-	            		}
-	            		return;
-	            	}
-	            	*/
-	            	/*
-	            	if(event.getKeyCode() == KeyEvent.VK_RIGHT) {
-	            		if(positionInWord<4) {
-	            			if(positionInWord+1<enteredCharactersInWord) {
-	            				wordArea[numOfTries][positionInWord].unHighlight();
-	            				positionInWord++;
-	            				wordArea[numOfTries][positionInWord].highlight();
-		            		
-	            			}
-	            		}
-	            		return;
-	            	}
-	            	*/
-	            	if(KeyEvent.getKeyText(event.getKeyCode()).length() == 1)
-	            	{
-    		            wordArea[numOfTries][positionInWord].changeBoxText("" + Character.toUpperCase(event.getKeyChar()));
-    		            
-    		            if(enteredCharactersInWord<5) {
-                			enteredCharactersInWord++;
-    		            }
-    		            
-            			if(positionInWord<4) {
-            				positionInWord++;
-            				wordArea[numOfTries][positionInWord-1].unHighlight();
-                			wordArea[numOfTries][positionInWord].highlight();
-            			}
-            			
-	            	}
-	            	
-	            }
-	            
-	            public void keyReleased(KeyEvent event) {
-	            	//**//
-	            }
-	            public void keyTyped(KeyEvent event) {
-	            	//**//
-	            }
-	        };
-	        
-	        mainWordleBox.setFocusable(true);
-	        mainWordleBox.requestFocus();
-			mainWordleBox.addKeyListener(keyListener);
+			addKeyListener();
 			
 		}
 		
