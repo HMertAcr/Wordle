@@ -15,16 +15,10 @@ public class CharBox
 	public
 	JPanel charBoxPanel;
 	JLabel charLabel;
-	int colorState;
-	//0=black empty
-	//1=gray char not in word
-	//2=yellow char in word wrong place
-	//3=green char in correct place
-	
+
 	public CharBox()
 	{
 		
-		colorState = 0;
 		
 		charBoxPanel = new JPanel();
 				
@@ -73,17 +67,14 @@ public class CharBox
 		{
 			if(correctWord.charAt(position) == character.charAt(0))
 			{
-				colorState = 3;
 				charBoxPanel.setBackground(Color.green);
 				return;
 			}
-			colorState = 2;
 			charBoxPanel.setBackground(Color.yellow);
 			return;
 		}
 		else
 		{
-			colorState = 1;
 			charBoxPanel.setBackground(Color.gray);
 			return;
 		}
