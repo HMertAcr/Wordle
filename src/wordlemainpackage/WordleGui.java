@@ -150,6 +150,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		wordArea[0][0][0].highlight();
 		
 	}
+	
+	public void gameWon(int player){
+		System.out.print("Player "+(player+1)+" Won!");
+	}
+   
+	public void gameLost(int player){
+		System.out.print("Player "+(player+1)+" Lost!");
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -228,6 +236,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	    		}
 	    		return;
 	    	}
+	    	
 	    	if(event.getKeyCode() == KeyEvent.VK_ENTER) {
 	    		if(enteredCharactersInWord[focusedOn-1] == 5) {
 	    			
@@ -246,7 +255,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 	            			if(enteredWord.equals(correctAnswer[focusedOn-1])) {
 		            			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
-		            			System.out.print("you won");
+		            			gameWon(focusedOn-1);
 		            			gameFinished[focusedOn-1]=true;
 		            			
 	            			}
@@ -265,7 +274,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	            		else
 	            		{
 	            			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
-	            			System.out.println("you lost");
+	            			gameLost(focusedOn-1);
 	            			gameFinished[focusedOn-1]=true;
 	            		}
 	    				
@@ -273,6 +282,22 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 	    		}
 	    		return;
+	    	}
+	    	
+	    	if (event.getKeyCode() == KeyEvent.VK_LEFT) {
+	    		if((focusedOn)>1){
+	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
+	    			focusedOn--;
+	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
+	    		}
+	    	}
+	    	
+	    	if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
+	    		if((focusedOn)<playerAmount){
+	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
+	    			focusedOn++;
+	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
+	    		}
 	    	}
 	    	
 	    	if ((event.getKeyChar() > 64 && event.getKeyChar() < 91) || (event.getKeyChar() > 96 && event.getKeyChar() < 123))
@@ -294,7 +319,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		}
 
     }
-   
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		/**/
@@ -303,11 +328,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		/**/		
+		/**/	
+		
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
 		
 		int frameWidth = this.getWidth();
 		@SuppressWarnings("unused")
@@ -333,23 +359,23 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				}
 			}
 		}
-		
+        //this.repaint();
         Graphics g=getGraphics();  
         g.setColor(Color.yellow);  
         g.fillOval(e.getX()-5,e.getY()-5,10,10);
-        
         //System.out.print(e.getX()+" "+e.getY());
         
+		
 	}
-
+	
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
 		/**/
 		
 	}
-
+	
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		/**/
 		
 	}
