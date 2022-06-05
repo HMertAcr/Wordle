@@ -15,10 +15,9 @@ public class CharBox
 	public
 	JPanel charBoxPanel;
 	JLabel charLabel;
-
+	
 	public CharBox()
 	{
-		
 		
 		charBoxPanel = new JPanel();
 				
@@ -27,7 +26,7 @@ public class CharBox
 
 		charLabel = new JLabel();
 		
-		charLabel.setFont(new Font("SansSerif", Font.BOLD, 30));
+		charLabel.setFont(new Font("SansSerif", Font.BOLD, 92));
 		charLabel.setForeground(Color.white);
 		
 		charLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -50,8 +49,27 @@ public class CharBox
 		
 	}
 	
+	public void resizeText(){
+				
+		Font labelFont = charLabel.getFont();
+		String labelText = charLabel.getText();
+
+		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth(labelText);
+		int componentWidth = charLabel.getWidth();
+
+		double widthRatio = (double)componentWidth / (double)stringWidth;
+
+		int newFontSize = (int)(labelFont.getSize() * widthRatio);
+		int componentHeight = charLabel.getHeight();
+
+		int fontSizeToUse = Math.min(newFontSize, componentHeight);
+
+		charLabel.setFont(new Font(labelFont.getName(), Font.BOLD, fontSizeToUse));
+
+	}
+	
 	public void highlight() {
-		charLabel.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
+		charLabel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, new Color(180,160,60)));
 	}
 	
 	public void unHighlight() {
@@ -67,15 +85,15 @@ public class CharBox
 		{
 			if(correctWord.charAt(position) == character.charAt(0))
 			{
-				charBoxPanel.setBackground(Color.green);
+				charBoxPanel.setBackground(new Color(85,140,80));
 				return;
 			}
-			charBoxPanel.setBackground(Color.yellow);
+			charBoxPanel.setBackground(new Color(180,160,60));
 			return;
 		}
 		else
 		{
-			charBoxPanel.setBackground(Color.gray);
+			charBoxPanel.setBackground(new Color(60,60,60));
 			return;
 		}
 		

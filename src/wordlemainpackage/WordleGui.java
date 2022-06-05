@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -18,7 +20,7 @@ import javax.swing.JPanel;
 
 
 @SuppressWarnings("serial")
-public class WordleGui extends JFrame implements ActionListener, KeyListener, MouseListener
+public class WordleGui extends JFrame implements ActionListener, KeyListener, MouseListener, ComponentListener
 
 {
 	public
@@ -43,28 +45,33 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 		gameStarted = false;
 		focusedOn = 1;
+		playerAmount = 0;
 		
 		this.setVisible(true);
-		this.setSize(550,550);
+		this.setSize(new Dimension(550,550));
+		
+		this.setMinimumSize(new Dimension(350,350));
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
-		
+				
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
         this.addKeyListener(this);
         this.addMouseListener(this);
+        this.addComponentListener(this);
         this.setFocusable(true);
         this.requestFocus();
 		
 		this.setLayout(new GridLayout(1,1));
-		this.setBackground(Color.blue);
-		getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
+		this.setBackground(new Color(60,60,60));
+		this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		this.getContentPane().setBackground(new Color(60,60,60));
+
 		startMenu();
 		
 	}
-	
+
 	public void startMenu() 
 	{
 		gameMenu = new JPanel();
@@ -79,7 +86,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		//onePlayerButton.setBounds(50,50,150,100);
 		//twoPlayerButton.setBounds(250,50,150,100);
 		
-		onePlayerButton.setText("SinglePlayer");
+		onePlayerButton.setText("OnePlayer");
 		twoPlayerButton.setText("TwoPlayer");
 		
 		onePlayerButton.addActionListener(this);
@@ -120,7 +127,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 			for(int i=0; i<playerAmount; i++) {
 				this.add(wordleQuestionArea[i]);
-				wordleQuestionArea[i].setBackground(Color.green);
+				wordleQuestionArea[i].setBackground(new Color(18,18,18));
 				wordleQuestionArea[i].setLayout(layout);
 				wordleQuestionArea[i].setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			}
@@ -145,7 +152,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					wordleQuestionArea[i].add(wordArea[row][column][i].charBoxPanel);
 					
 				}
-			}
+			}			
 		}
 		wordArea[0][0][0].highlight();
 		
@@ -157,6 +164,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
    
 	public void gameLost(int player){
 		System.out.print("Player "+(player+1)+" Lost!");
+	}
+	
+	public void changeFocus(int newFocus) {
+		wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
+		focusedOn = newFocus;
+		if(!gameFinished[focusedOn-1]) {
+			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
+		}
 	}
 
 	@Override
@@ -173,15 +188,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				playerAmount=1;
 				focusedOn = 1;
 				
-				this.setSize(550, 550);
-				
 				GridLayout layout = new GridLayout(1,1);
 				layout.setHgap(10);
 				layout.setVgap(10);
 				
-				this.setLayout(layout);
-				this.setBackground(Color.blue);
-				
+				this.setLayout(layout);				
 				startWordle();
 			}
 		}
@@ -197,7 +208,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				playerAmount=2;
 				focusedOn = 1;
 				
-				this.setSize(1090, 550);
+				this.setSize(new Dimension(this.getWidth()*2-10, this.getHeight()));
+				
+				this.setMinimumSize(new Dimension((this.getMinimumSize().width*2)-10,this.getMinimumSize().height));
+				
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 				
 				GridLayout layout = new GridLayout(1,2);
 				
@@ -205,8 +221,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				layout.setVgap(10);
 				
 				this.setLayout(layout);
-				
-				getContentPane().setBackground(Color.blue);
 				
 				startWordle();
 			}
@@ -255,8 +269,17 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 	            			if(enteredWord.equals(correctAnswer[focusedOn-1])) {
 		            			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
+		            			
 		            			gameWon(focusedOn-1);
 		            			gameFinished[focusedOn-1]=true;
+		            			
+		            			if(focusedOn<playerAmount) {
+		            				changeFocus((focusedOn + 1));
+		            			}
+		            			else
+		            			{
+		            				changeFocus((focusedOn - 1));
+		            			}
 		            			
 	            			}
 	            			else
@@ -273,9 +296,18 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	            		}
 	            		else
 	            		{
-	            			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
+	            			
 	            			gameLost(focusedOn-1);
 	            			gameFinished[focusedOn-1]=true;
+
+	            			if(focusedOn<playerAmount) {
+	            				changeFocus((focusedOn + 1));
+	            			}
+	            			else
+	            			{
+	            				changeFocus((focusedOn - 1));
+	            			}
+	            			
 	            		}
 	    				
 	    			}
@@ -336,32 +368,23 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public void mousePressed(MouseEvent e) {
 		
 		int frameWidth = this.getWidth();
-		@SuppressWarnings("unused")
 		int frameHeight = this.getHeight();
 
 		int clickedX = e.getX();
-		@SuppressWarnings("unused")
 		int clickedY = e.getY();
+		
 		if(gameStarted) {
 			if (clickedX<=frameWidth/playerAmount){
-				wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
-				focusedOn = 1;
-				if(!gameFinished[focusedOn-1]) {
-					wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
-				}
+				changeFocus(1);
 			}
 			else
 			{
-				wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
-				focusedOn = 2;
-				if(!gameFinished[focusedOn-1]) {
-					wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
-				}
+				changeFocus(2);
 			}
 		}
         //this.repaint();
         Graphics g=getGraphics();  
-        g.setColor(Color.yellow);  
+        g.setColor(Color.yellow);
         g.fillOval(e.getX()-5,e.getY()-5,10,10);
         //System.out.print(e.getX()+" "+e.getY());
         
@@ -389,7 +412,34 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	@Override
 	public void mouseExited(MouseEvent e) {
 		/**/
-		
+	}
+	
+	@Override
+	public void componentResized(ComponentEvent e) {
+		if(gameStarted) {
+			for(int row=0;row<5;row++) {
+				for(int column=0;column<5;column++) {
+					for(int i=0; i<playerAmount; i++) {
+						wordArea[row][column][i].resizeText();
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		/**/
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		/**/
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		/**/		
 	}
 
 	
