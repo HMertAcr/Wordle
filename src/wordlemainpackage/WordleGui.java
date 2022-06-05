@@ -56,6 +56,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 				
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setTitle("Wordle");
 		
         this.addKeyListener(this);
         this.addMouseListener(this);
@@ -65,6 +66,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		this.setLayout(new GridLayout(1,1));
 		this.setBackground(new Color(60,60,60));
+		
 		this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		this.getContentPane().setBackground(new Color(60,60,60));
 
@@ -118,12 +120,13 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				wordleQuestionArea[i] = new JPanel();
 			}
 			
+			this.remove(gameMenu);
+			
+			this.setLayout(new GridLayout(1,2));
 			
 			GridLayout layout = new GridLayout(5,5);
 			layout.setHgap(5);
 			layout.setVgap(5);
-			
-			this.remove(gameMenu);
 			
 			for(int i=0; i<playerAmount; i++) {
 				this.add(wordleQuestionArea[i]);
@@ -188,11 +191,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				playerAmount=1;
 				focusedOn = 1;
 				
-				GridLayout layout = new GridLayout(1,1);
-				layout.setHgap(10);
-				layout.setVgap(10);
-				
-				this.setLayout(layout);				
+				this.setLayout(new GridLayout(1,1));				
 				startWordle();
 			}
 		}
@@ -214,13 +213,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
-				
-				GridLayout layout = new GridLayout(1,2);
-				
-				layout.setHgap(10);
-				layout.setVgap(10);
-				
-				this.setLayout(layout);
+								
+				this.setLayout(new GridLayout(1,2));
 				
 				startWordle();
 			}
@@ -278,9 +272,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		            			}
 		            			else
 		            			{
-		            				changeFocus((focusedOn - 1));
+		            				if(focusedOn>1) {
+			            				changeFocus((focusedOn - 1));
+		            				}
 		            			}
-		            			
 	            			}
 	            			else
 	            			{
@@ -305,7 +300,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	            			}
 	            			else
 	            			{
+	            				if(focusedOn>1) {
 	            				changeFocus((focusedOn - 1));
+	            				}
 	            			}
 	            			
 	            		}

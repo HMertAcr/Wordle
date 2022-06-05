@@ -1,6 +1,7 @@
 package wordlemainpackage;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 
@@ -29,6 +30,8 @@ public class CharBox
 		charLabel.setFont(new Font("SansSerif", Font.BOLD, 92));
 		charLabel.setForeground(Color.white);
 		
+		//charBoxPanel.setSize(100,100);
+		//charBoxPanel.setPreferredSize(new Dimension(100,100));
 		charLabel.setHorizontalAlignment(JLabel.CENTER);
 		charLabel.setVerticalAlignment(JLabel.CENTER);
 				
@@ -52,15 +55,14 @@ public class CharBox
 	public void resizeText(){
 				
 		Font labelFont = charLabel.getFont();
-		String labelText = charLabel.getText();
+		
+		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth("A");
+		int componentWidth = charBoxPanel.getWidth();
 
-		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth(labelText);
-		int componentWidth = charLabel.getWidth();
-
-		double widthRatio = (double)componentWidth / (double)stringWidth;
+		double widthRatio = (double)(((9*componentWidth)/10)-10) / (double)stringWidth;
 
 		int newFontSize = (int)(labelFont.getSize() * widthRatio);
-		int componentHeight = charLabel.getHeight();
+		int componentHeight = charBoxPanel.getHeight();
 
 		int fontSizeToUse = Math.min(newFontSize, componentHeight);
 
