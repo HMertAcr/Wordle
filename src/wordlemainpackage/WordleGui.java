@@ -3,7 +3,10 @@ package wordlemainpackage;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +17,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 
 @SuppressWarnings("serial")
@@ -26,30 +33,38 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public
 	wordleDictionary Dictionary;
 	String correctAnswer[];
+	String playerNames[];
 	CharBox wordArea[][][];
 	JPanel wordleQuestionArea[];
+	JPanel keyboard[];
+	JPanel bottomLayer;
 	JPanel gameMenu;
-	JButton onePlayerButton;
-	JButton twoPlayerButton;
+	JTextField playerOneNameField;
+	JTextField playerTwoNameField;
+	JRadioButton onePlayerButton;
+	JRadioButton twoPlayerButton;
+	JRadioButton addKeyboardYESButton;
+	JRadioButton addKeyboardNOButton;
+	JButton startGameButton;
+	JButton openStatsButton;
 	int positionInWord[];
 	int enteredCharactersInWord[];
 	int numOfTries[];
 	int playerAmount;
+	int focusedOn;
+	boolean addKeyboard;
 	boolean gameStarted;
 	boolean gameFinished[];
-	int focusedOn;
 
 	public WordleGui(wordleDictionary Dictionary)
 	{
 		this.Dictionary = Dictionary;
 
 		gameStarted = false;
-		focusedOn = 1;
-		playerAmount = 0;
 		
 		this.setVisible(true);
-		this.setSize(new Dimension(550,550));
 		
+		this.setSize(new Dimension(550,550));
 		this.setMinimumSize(new Dimension(350,350));
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -67,38 +82,196 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		this.setLayout(new GridLayout(1,1));
 		this.setBackground(new Color(60,60,60));
 		
-		this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		//this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		this.getContentPane().setBackground(new Color(60,60,60));
 
 		startMenu();
 		
 	}
 
-	public void startMenu() 
+	public void startMenu()
 	{
+		
+		addKeyboard = false;
+		playerAmount = 1;
+		
 		gameMenu = new JPanel();
+		GridBagLayout gbl = new GridBagLayout();
+		gameMenu.setLayout(gbl);
 		
-		onePlayerButton = new JButton();
-		twoPlayerButton = new JButton();
+		GridBagConstraints gcon = new GridBagConstraints();
 		
-		gameMenu.setLayout(new GridLayout(1,2));
-
-		//gameMenu.setLayout(null);
+		this.add(gameMenu);
 		
-		//onePlayerButton.setBounds(50,50,150,100);
-		//twoPlayerButton.setBounds(250,50,150,100);
+		startGameButton = new JButton();
+		openStatsButton = new JButton();
+		
+		onePlayerButton = new JRadioButton();
+		twoPlayerButton = new JRadioButton();
+		
+		ButtonGroup playerAmountGroup = new ButtonGroup();
+		playerAmountGroup.add(onePlayerButton);
+		playerAmountGroup.add(twoPlayerButton);
+		
+		onePlayerButton.setSelected(true);
+		
+		playerOneNameField = new JTextField();
+		playerTwoNameField = new JTextField();
+		
+		addKeyboardYESButton = new JRadioButton();
+		addKeyboardNOButton = new JRadioButton();
+		
+		ButtonGroup shouldAddKeyboardButton = new ButtonGroup();
+		shouldAddKeyboardButton.add(addKeyboardYESButton);
+		shouldAddKeyboardButton.add(addKeyboardNOButton);
+		
+		addKeyboardNOButton.setSelected(true);
 		
 		onePlayerButton.setText("OnePlayer");
 		twoPlayerButton.setText("TwoPlayer");
 		
+		addKeyboardYESButton.setText("Yes");
+		addKeyboardNOButton.setText("No");
+		
+		startGameButton.setText("Start");
+		openStatsButton.setText("Stats");
+		
+		JLabel enterPlayerNamesLabel = new JLabel("Enter Players");
+		JLabel enterIfKeyboardLabel = new JLabel("Do you want to add keyboard?");
+
+		enterPlayerNamesLabel.setText("Enter Players");
+		enterIfKeyboardLabel.setText("Do you want to add keyboard?");
+
 		onePlayerButton.addActionListener(this);
 		twoPlayerButton.addActionListener(this);
-				
-		gameMenu.add(onePlayerButton);
-		gameMenu.add(twoPlayerButton);
+		startGameButton.addActionListener(this);
+		addKeyboardYESButton.addActionListener(this);
+		addKeyboardNOButton.addActionListener(this);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=0;
+		gcon.gridwidth=4;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.NONE;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		gameMenu.add(enterPlayerNamesLabel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=1;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.NONE;
+		gcon.insets = new Insets(0,0,0,20);
+		
+		gameMenu.add(onePlayerButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=2;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.NONE;
+		gcon.insets = new Insets(0,0,0,20);
 
-		this.add(gameMenu);
+		gameMenu.add(twoPlayerButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=3;
+		gcon.gridy=1;
+		gcon.gridwidth=3;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.LINE_START;
+		gcon.fill=GridBagConstraints.HORIZONTAL;
+		gcon.insets = new Insets(0,0,0,40);
 
+		gameMenu.add(playerOneNameField, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=3;
+		gcon.gridy=2;
+		gcon.gridwidth=3;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.LINE_START;
+		gcon.fill=GridBagConstraints.HORIZONTAL;
+		gcon.insets = new Insets(0,0,0,40);
+
+		gameMenu.add(playerTwoNameField, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=3;
+		gcon.gridwidth=4;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.NONE;
+		gcon.insets = new Insets(0,10,0,0);
+		
+		gameMenu.add(enterIfKeyboardLabel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=4;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.NONE;
+		gcon.insets = new Insets(0,0,0,0);
+
+		gameMenu.add(addKeyboardNOButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=4;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.NONE;
+		gcon.insets = new Insets(0,0,0,0);
+
+		gameMenu.add(addKeyboardYESButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=2;
+		gcon.gridx=0;
+		gcon.gridy=5;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+
+		gameMenu.add(startGameButton, gcon);
+
+		gcon.weightx=1;
+		gcon.weighty=2;
+		gcon.gridx=2;
+		gcon.gridy=5;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+
+		gameMenu.add(openStatsButton, gcon);
+		
+		playerTwoNameField.setEnabled(false);
+
+		gameMenu.revalidate();
+		gameMenu.repaint();
 	}
 	
 	
@@ -106,6 +279,13 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	{
 		
 		{
+			
+			focusedOn = 1;
+			
+			this.remove(gameMenu);
+
+			this.setLayout(new GridBagLayout());
+			GridBagConstraints gcon = new GridBagConstraints();
 			
 			correctAnswer = new String[playerAmount];
 			
@@ -116,51 +296,126 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 			wordleQuestionArea = new JPanel[playerAmount];
 			
-			for(int i=0; i<playerAmount; i++) {
-				wordleQuestionArea[i] = new JPanel();
-			}
-			
-			this.remove(gameMenu);
-			
-			this.setLayout(new GridLayout(1,2));
-			
 			GridLayout layout = new GridLayout(5,5);
 			layout.setHgap(5);
 			layout.setVgap(5);
 			
+			
 			for(int i=0; i<playerAmount; i++) {
-				this.add(wordleQuestionArea[i]);
+				wordleQuestionArea[i] = new JPanel();
+				
+				wordleQuestionArea[i].setPreferredSize(new Dimension (55, 55));
+				wordleQuestionArea[i].setMinimumSize(new Dimension (55, 55));
 				wordleQuestionArea[i].setBackground(new Color(18,18,18));
 				wordleQuestionArea[i].setLayout(layout);
 				wordleQuestionArea[i].setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+				
+				gcon.fill = GridBagConstraints.BOTH;
+				gcon.weightx=1;
+				gcon.weighty=11;
+				gcon.gridx=i;
+				gcon.gridy=0;
+				gcon.gridwidth=1;
+				gcon.gridheight=1;
+				if(playerAmount>1) {
+					if(i==0)
+					{
+						gcon.insets = new Insets(10,10,10,5);
+					}
+					else
+					{
+						if(i==1)
+						{
+							gcon.insets = new Insets(10,5,10,10);
+						}
+					}
+				}
+				else
+				{
+					gcon.insets = new Insets(10,10,10,10);
+				}
+				this.add(wordleQuestionArea[i], gcon);
 			}
 			
-			startWordArea();
+			wordArea = new CharBox[5][5][playerAmount];
 			
+			for(int row=0;row<5;row++) {
+				for(int column=0;column<5;column++) {
+					for(int i=0;i<playerAmount;i++) {
+						
+						wordArea[row][column][i] = new CharBox();
+						wordleQuestionArea[i].add(wordArea[row][column][i].charBoxPanel);
+						
+					}
+				}			
+			}
+			wordArea[0][0][0].highlight();			
+		}
+		
+		if(addKeyboard) {
+			startKeyboard();
+		}
+		
+		startBottomLayer();
+		
+		this.revalidate();
+		this.repaint();
+	}
+	
+	private void startKeyboard() {
+		
+		GridBagConstraints gcon = new GridBagConstraints();
+	
+		keyboard = new JPanel[playerAmount];
+		
+		for(int i=0; i<playerAmount; i++) {
+			keyboard[i] = new JPanel();
+			
+			keyboard[i].setPreferredSize(new Dimension (55, 20));
+			keyboard[i].setMinimumSize(new Dimension (55, 20));
+			keyboard[i].setBackground(Color.yellow);
+			
+			gcon.fill = GridBagConstraints.BOTH;
+			gcon.weightx=1;
+			gcon.weighty=4;
+			gcon.gridx=i;
+			gcon.gridy=1;
+			gcon.gridwidth=1;
+			gcon.gridheight=1;
+			this.add(keyboard[i], gcon);
 		}
 		
 	}
-	
-	public void startWordArea()
-	
-	{
+
+	private void startBottomLayer() {
 		
-		wordArea = new CharBox[5][5][playerAmount];
+		bottomLayer = new JPanel();
 		
-		for(int row=0;row<5;row++) {
-			for(int column=0;column<5;column++) {
-				for(int i=0;i<playerAmount;i++) {
-					
-					wordArea[row][column][i] = new CharBox();
-					wordleQuestionArea[i].add(wordArea[row][column][i].charBoxPanel);
-					
-				}
-			}			
+		bottomLayer.setPreferredSize(new Dimension ((530*playerAmount), 25));
+		bottomLayer.setMinimumSize(new Dimension ((330*playerAmount), 25));
+		
+		bottomLayer.setBackground(Color.green);
+				
+		GridBagConstraints gcon = new GridBagConstraints();
+		
+		gcon.fill = GridBagConstraints.BOTH;
+		gcon.weightx=0;
+		gcon.weighty=0;
+		gcon.gridx=0;
+		if(addKeyboard) {
+			gcon.gridy=2;
 		}
-		wordArea[0][0][0].highlight();
+		else
+		{
+			gcon.gridy=1;
+		}
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
 		
+		this.add(bottomLayer, gcon);
+
 	}
-	
+
 	public void gameWon(int player){
 		System.out.print("Player "+(player+1)+" Won!");
 	}
@@ -178,47 +433,110 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(ActionEvent event) 
+	{
+		if(event.getSource() == startGameButton) {
+			if((!(playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name")))&&(playerAmount!=2||(!(playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name"))))) {
+				if(!gameStarted) {
+					
+					gameStarted = true;
+					
+					if(playerAmount==1) {
+						
+						playerNames = new String[] {playerOneNameField.getText()};
+						enteredCharactersInWord = new int[]{0};
+						positionInWord = new int[]{0};
+						numOfTries = new int[]{0};
+						gameFinished = new boolean[]{false};
+						
+						if(addKeyboard)
+						{
+							
+							this.setSize(new Dimension(this.getWidth(), (15*(this.getHeight()/11))));
+							this.setMinimumSize(new Dimension(this.getMinimumSize().width, 16*(this.getMinimumSize().height/11)));
+							
+							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+						}
+						else
+						{
+							this.setSize(new Dimension(this.getWidth(), this.getHeight()));
+							this.setMinimumSize(new Dimension(this.getMinimumSize().width, this.getMinimumSize().height));
+							
+							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+						}
+						
+					}
+					else
+					{
+						playerNames = new String[] {playerOneNameField.getText(), playerTwoNameField.getText()};
+						enteredCharactersInWord = new int[]{0,0};
+						positionInWord = new int[]{0,0};
+						numOfTries = new int[]{0,0};
+						gameFinished = new boolean[]{false,false};
+						
+						if(addKeyboard)
+						{
+							this.setSize(new Dimension(this.getWidth()*2-10, (15*(this.getHeight()/11))));
+							
+							this.setMinimumSize(new Dimension((this.getMinimumSize().width*2)-10, 16*(this.getMinimumSize().height/11)));
+							
+							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+						}
+						else
+						{
+							this.setSize(new Dimension(this.getWidth()*2-10, this.getHeight()));
+							
+							this.setMinimumSize(new Dimension((this.getMinimumSize().width*2)-10,this.getMinimumSize().height));
+							
+							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+						}
+						
+					}
+					
+					startWordle();
+					
+				}
+			}
+			else
+			{
+				playerOneNameField.setText("Please Enter A Name");
+				if(playerTwoNameField.isEnabled()) {
+					playerTwoNameField.setText("Please Enter A Name");
+				}
+			}
+		}
+		
 		if(event.getSource() == onePlayerButton) {
 			if(!gameStarted) {
-				gameStarted = true;
-				
-				enteredCharactersInWord = new int[]{0};
-				positionInWord = new int[]{0};
-				numOfTries = new int[]{0};
-				gameFinished = new boolean[]{false};
-				
 				playerAmount=1;
-				focusedOn = 1;
-				
-				this.setLayout(new GridLayout(1,1));				
-				startWordle();
+				playerTwoNameField.setText("");
+				playerTwoNameField.setEnabled(false);
 			}
 		}
+		
 		if(event.getSource() == twoPlayerButton) {
 			if(!gameStarted) {
-				gameStarted = true;
-				
-				enteredCharactersInWord = new int[]{0,0};
-				positionInWord = new int[]{0,0};
-				numOfTries = new int[]{0,0};
-				gameFinished = new boolean[]{false,false};
-				
 				playerAmount=2;
-				focusedOn = 1;
-				
-				this.setSize(new Dimension(this.getWidth()*2-10, this.getHeight()));
-				
-				this.setMinimumSize(new Dimension((this.getMinimumSize().width*2)-10,this.getMinimumSize().height));
-				
-				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-				this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
-								
-				this.setLayout(new GridLayout(1,2));
-				
-				startWordle();
+				playerTwoNameField.setEnabled(true);
 			}
 		}
+		
+		if(event.getSource() == addKeyboardYESButton) {
+			if(!gameStarted) {
+				addKeyboard=true;
+			}
+		}
+		
+		if(event.getSource() == addKeyboardNOButton) {
+			if(!gameStarted) {
+				addKeyboard=false;				
+			}
+		}
+		
 	}
 	
 	public void keyPressed(KeyEvent event) {
@@ -385,6 +703,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         g.fillOval(e.getX()-5,e.getY()-5,10,10);
         //System.out.print(e.getX()+" "+e.getY());
         
+		//System.out.println(wordArea[0][0][focusedOn-1].charBoxPanel.getBounds());
+		//System.out.println(wordArea[4][4][focusedOn-1].charBoxPanel.getBounds());
+		//System.out.println(wordleQuestionArea[focusedOn-1].getBounds());
+		//System.out.println(this.getContentPane().getBounds());
+		//System.out.println(this.getBounds());
 		
 	}
 	
