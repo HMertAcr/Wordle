@@ -38,7 +38,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	CharBox wordArea[][][];
 	JPanel gameMenu;
 	JPanel wordleQuestionArea[];
-	JPanel keyboard[];
+	JPanel keyboard;
+	KeyboardBox keyboardKeys[];
 	JPanel bottomLayer;
 	JLabel bottomLayerNamesLabel;
 	JLabel bottomLayerTimeLabel;
@@ -153,7 +154,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		addKeyboardNOButton.addActionListener(this);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
+		gcon.weighty=3;
 		gcon.gridx=0;
 		gcon.gridy=0;
 		gcon.gridwidth=4;
@@ -165,55 +166,55 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gameMenu.add(enterPlayerNamesLabel, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
+		gcon.weighty=2;
 		gcon.gridx=0;
 		gcon.gridy=1;
 		gcon.gridwidth=1;
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,20);
+		gcon.insets = new Insets(0,0,0,0);
 		
 		gameMenu.add(onePlayerButton, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
+		gcon.weighty=2;
 		gcon.gridx=0;
 		gcon.gridy=2;
 		gcon.gridwidth=1;
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,20);
+		gcon.insets = new Insets(0,0,0,0);
 
 		gameMenu.add(twoPlayerButton, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=3;
+		gcon.weighty=2;
+		gcon.gridx=1;
 		gcon.gridy=1;
 		gcon.gridwidth=3;
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.LINE_START;
 		gcon.fill=GridBagConstraints.HORIZONTAL;
-		gcon.insets = new Insets(0,0,0,40);
+		gcon.insets = new Insets(0,0,0,20);
 
 		gameMenu.add(playerOneNameField, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=3;
+		gcon.weighty=2;
+		gcon.gridx=1;
 		gcon.gridy=2;
 		gcon.gridwidth=3;
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.LINE_START;
 		gcon.fill=GridBagConstraints.HORIZONTAL;
-		gcon.insets = new Insets(0,0,0,40);
+		gcon.insets = new Insets(0,0,0,20);
 
 		gameMenu.add(playerTwoNameField, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
+		gcon.weighty=3;
 		gcon.gridx=0;
 		gcon.gridy=3;
 		gcon.gridwidth=4;
@@ -225,7 +226,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gameMenu.add(enterIfKeyboardLabel, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
+		gcon.weighty=2;
 		gcon.gridx=0;
 		gcon.gridy=4;
 		gcon.gridwidth=2;
@@ -237,7 +238,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gameMenu.add(addKeyboardNOButton, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=1;
+		gcon.weighty=2;
 		gcon.gridx=2;
 		gcon.gridy=4;
 		gcon.gridwidth=2;
@@ -249,7 +250,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gameMenu.add(addKeyboardYESButton, gcon);
 		
 		gcon.weightx=1;
-		gcon.weighty=2;
+		gcon.weighty=4;
 		gcon.gridx=0;
 		gcon.gridy=5;
 		gcon.gridwidth=2;
@@ -261,7 +262,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gameMenu.add(startGameButton, gcon);
 
 		gcon.weightx=1;
-		gcon.weighty=2;
+		gcon.weighty=4;
 		gcon.gridx=2;
 		gcon.gridy=5;
 		gcon.gridwidth=2;
@@ -271,6 +272,54 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.insets = new Insets(10,10,5,10);
 
 		gameMenu.add(openStatsButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=6;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+
+		gameMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=1;
+		gcon.gridy=6;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+
+		gameMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=6;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+
+		gameMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=3;
+		gcon.gridy=6;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+
+		gameMenu.add(new JLabel(), gcon);
 		
 		playerTwoNameField.setEnabled(false);
 
@@ -310,7 +359,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				
 				wordleQuestionArea[i].setPreferredSize(new Dimension (55, 55));
 				wordleQuestionArea[i].setMinimumSize(new Dimension (55, 55));
-				wordleQuestionArea[i].setBackground(new Color(18,18,18));
+				wordleQuestionArea[i].setBackground(new Color(20,20,20));
 				wordleQuestionArea[i].setLayout(layout);
 				wordleQuestionArea[i].setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 				
@@ -370,24 +419,63 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		GridBagConstraints gcon = new GridBagConstraints();
 	
-		keyboard = new JPanel[playerAmount];
+		keyboard = new JPanel();
 		
-		for(int i=0; i<playerAmount; i++) {
-			keyboard[i] = new JPanel();
+			keyboard = new JPanel();
 			
-			keyboard[i].setPreferredSize(new Dimension (55, 20));
-			keyboard[i].setMinimumSize(new Dimension (55, 20));
-			keyboard[i].setBackground(Color.yellow);
+			keyboard.setPreferredSize(new Dimension (55*playerAmount, 20));
+			keyboard.setMinimumSize(new Dimension (55*playerAmount, 20));
+			keyboard.setBackground(new Color(20,20,20));
 			
 			gcon.fill = GridBagConstraints.BOTH;
 			gcon.weightx=1;
-			gcon.weighty=4;
-			gcon.gridx=i;
+			gcon.weighty=6;
+			gcon.gridx=0;
 			gcon.gridy=1;
-			gcon.gridwidth=1;
+			gcon.gridwidth=playerAmount;
 			gcon.gridheight=1;
-			this.add(keyboard[i], gcon);
-		}
+			this.add(keyboard, gcon);
+			
+			keyboard.setLayout(new GridBagLayout());
+			keyboard.setBorder(BorderFactory.createEmptyBorder(5,10,0,5));
+			
+			keyboardKeys = new KeyboardBox[28];
+			
+			for(int i=0; i<26 ;i++)
+			{
+				keyboardKeys[i] = new KeyboardBox((char)(i+65)+"");
+				gcon.fill = GridBagConstraints.BOTH;
+				gcon.weightx=1;
+				gcon.weighty=1;
+				gcon.gridx=i%10;
+				gcon.gridy=i/10;
+				gcon.gridwidth=1;
+				gcon.gridheight=1;
+				gcon.insets = new Insets(0,0,5,5);
+				keyboard.add(keyboardKeys[i].KeyboardBoxPanel, gcon);
+			}
+			
+			keyboardKeys[26] = new KeyboardBox("DELETE");
+			gcon.fill = GridBagConstraints.BOTH;
+			gcon.weightx=1;
+			gcon.weighty=1;
+			gcon.gridx=6;
+			gcon.gridy=2;
+			gcon.gridwidth=2;
+			gcon.gridheight=1;
+			gcon.insets = new Insets(0,0,5,5);
+			keyboard.add(keyboardKeys[26].KeyboardBoxPanel, gcon);
+			
+			keyboardKeys[27] = new KeyboardBox("ENTER");
+			gcon.fill = GridBagConstraints.BOTH;
+			gcon.weightx=1;
+			gcon.weighty=1;
+			gcon.gridx=8;
+			gcon.gridy=2;
+			gcon.gridwidth=2;
+			gcon.gridheight=1;
+			gcon.insets = new Insets(0,0,5,5);
+			keyboard.add(keyboardKeys[27].KeyboardBoxPanel, gcon);
 		
 	}
 
@@ -398,7 +486,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		bottomLayer.setPreferredSize(new Dimension ((530*playerAmount), 15));
 		bottomLayer.setMinimumSize(new Dimension ((330*playerAmount), 15));
 		
-		bottomLayer.setBackground(new Color(18,18,18));
+		bottomLayer.setBackground(new Color(20,20,20));
 
 		GridBagConstraints gcon = new GridBagConstraints();
 		
@@ -472,7 +560,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	{
 		
 		if(event.getSource() == startGameButton) {
-			if((!(playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name")))&&(playerAmount!=2||(!(playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name"))))) {
+			if((!(playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name")
+					||playerOneNameField.getText().equals("Name Too Long")||playerOneNameField.getText().length()>20))
+						&&((playerAmount!=2||(!(playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name")
+								||playerTwoNameField.getText().equals("Name Too Long")||playerTwoNameField.getText().length()>20)))))
+			{
 				if(!gameStarted) {
 					
 					this.setSize(new Dimension(550,550));
@@ -490,22 +582,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						
 						if(addKeyboard)
 						{
-							
-							this.setSize(new Dimension(this.getWidth(), (15*(this.getHeight()/11))));
-							this.setMinimumSize(new Dimension(this.getMinimumSize().width, 16*(this.getMinimumSize().height/11)));
-							
-							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+							this.setSize(new Dimension(this.getWidth(), (16*(this.getHeight()/11))+15));
+							this.setMinimumSize(new Dimension(this.getMinimumSize().width, (16*(this.getMinimumSize().height/11))+15));
 						}
 						else
 						{
 							this.setSize(new Dimension(this.getWidth(), this.getHeight()));
 							this.setMinimumSize(new Dimension(this.getMinimumSize().width, this.getMinimumSize().height));
-							
-							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 						}
-						
 					}
 					else
 					{
@@ -517,24 +601,18 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						
 						if(addKeyboard)
 						{
-							this.setSize(new Dimension(this.getWidth()*2-10, (15*(this.getHeight()/11))));
-							
-							this.setMinimumSize(new Dimension((this.getMinimumSize().width*2)-10, 16*(this.getMinimumSize().height/11)));
-							
-							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+							this.setSize(new Dimension((this.getWidth()-15)*2, (16*(this.getHeight()/11)+15)));
+							this.setMinimumSize(new Dimension((this.getMinimumSize().width-15)*2, (16*(this.getMinimumSize().height/11))+15));
 						}
 						else
 						{
-							this.setSize(new Dimension(this.getWidth()*2-10, this.getHeight()));
-							
-							this.setMinimumSize(new Dimension((this.getMinimumSize().width*2)-10,this.getMinimumSize().height));
-							
-							Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-							this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+							this.setSize(new Dimension((this.getWidth()-15)*2, this.getHeight()));
+							this.setMinimumSize(new Dimension(((this.getMinimumSize().width-15)*2),this.getMinimumSize().height));
 						}
-						
 					}
+					
+					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+					this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 					
 					startWordle();
 					
@@ -542,12 +620,25 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			}
 			else
 			{
-				if((playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name"))){
+				if((playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name")||playerOneNameField.getText().equals("Name Too Long"))){
 					playerOneNameField.setText("Please Enter A Name");
 				}
+				else
+				{
+					if((playerOneNameField.getText().length()>20)){
+						playerOneNameField.setText("Name Too Long");
+					}
+				}
+				
 				if(playerTwoNameField.isEnabled()) {
-					if((playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name"))){
+					if((playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name")||playerTwoNameField.getText().equals("Name Too Long"))){
 						playerTwoNameField.setText("Please Enter A Name");
+					}
+					else
+					{
+						if((playerTwoNameField.getText().length()>20)){
+							playerTwoNameField.setText("Name Too Long");
+						}
 					}
 				}
 			}
@@ -594,7 +685,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					if(oneSecond==9)
 					{
 						oneSecond=0;
-						if(tenSecond==9)
+						if(tenSecond==6)
 						{
 							tenSecond=0;
 							if(minute==9)
@@ -718,17 +809,17 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	    	
 	    	if (event.getKeyCode() == KeyEvent.VK_LEFT) {
 	    		if((focusedOn)>1){
-	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
-	    			focusedOn--;
-	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
+	    			if(!gameFinished[focusedOn-2]) {
+		    			changeFocus(focusedOn-1);
+	    			}
 	    		}
 	    	}
 	    	
 	    	if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
 	    		if((focusedOn)<playerAmount){
-	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
-	    			focusedOn++;
-	    			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
+	    			if(!gameFinished[focusedOn]) {
+	    			changeFocus(focusedOn+1);
+	    			}
 	    		}
 	    	}
 	    	
@@ -827,6 +918,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					for(int i=0; i<playerAmount; i++) {
 						wordArea[row][column][i].resizeText();
 					}
+				}
+			}
+			if(addKeyboard) {
+				for(int key=0;key<28;key++) {
+					keyboardKeys[key].resizeText();
 				}
 			}
 		}

@@ -5,45 +5,40 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class CharBox
+public class KeyboardBox
 {
 	
 	public
-	JPanel charBoxPanel;
+	JPanel KeyboardBoxPanel;
 	JLabel charLabel;
 	
-	public CharBox()
+	public KeyboardBox(String newLabelText)
 	{
 		
-		charBoxPanel = new JPanel();
+		KeyboardBoxPanel = new JPanel();
 				
-		charBoxPanel.setLayout(new GridLayout(1,1));
-		charBoxPanel.setBackground(Color.black);
+		KeyboardBoxPanel.setLayout(new GridLayout(1,1));
+		KeyboardBoxPanel.setBackground(Color.black);
 
 		charLabel = new JLabel();
-		
-		charLabel.setFont(new Font("SansSerif", Font.BOLD, 92));
+		charLabel.setText(newLabelText);
+
+		charLabel.setFont(new Font("SansSerif", Font.BOLD, 25));
 		charLabel.setForeground(Color.white);
 		
-		//charBoxPanel.setSize(100,100);
-		//charBoxPanel.setPreferredSize(new Dimension(100,100));
+		KeyboardBoxPanel.setPreferredSize(new Dimension(10,10));
+		KeyboardBoxPanel.setMinimumSize(new Dimension(10,10));
+		
 		charLabel.setHorizontalAlignment(JLabel.CENTER);
 		charLabel.setVerticalAlignment(JLabel.CENTER);
 				
-		charBoxPanel.add(charLabel);
+		KeyboardBoxPanel.add(charLabel);
 		
 
-	}
-	
-	public void changeBoxText(String newLabelText) {
-		
-		charLabel.setText(newLabelText);
-		
 	}
 	
 	public String getText() {
@@ -57,28 +52,33 @@ public class CharBox
 				
 		Font labelFont = charLabel.getFont();
 		
-		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth("A");
-		int componentWidth = charBoxPanel.getWidth();
+		String tempString = "";
+		int tempLength = charLabel.getText().length();
+		
+		if(tempLength==1) {
+			tempString = "W";
+		}
+		
+		if(tempLength==5||tempLength==6) {
+			tempString = "DELETE";
+		}
 
-		double widthRatio = (double)(((9*componentWidth)/10)-10) / (double)stringWidth;
+		
+		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth(tempString);
+		int componentWidth = KeyboardBoxPanel.getWidth();
+
+		double widthRatio = (double)(((9*componentWidth)/10)) / (double)stringWidth;
 
 		int newFontSize = (int)(labelFont.getSize() * widthRatio);
-		int componentHeight = charBoxPanel.getHeight();
+		int componentHeight = KeyboardBoxPanel.getHeight();
 
 		int fontSizeToUse = Math.min(newFontSize, componentHeight);
 
 		charLabel.setFont(new Font(labelFont.getName(), Font.BOLD, fontSizeToUse));
 
 	}
-	
-	public void highlight() {
-		charLabel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, new Color(180,160,60)));
-	}
-	
-	public void unHighlight() {
-		charLabel.setBorder(BorderFactory.createEmptyBorder());
-	}
-	
+	/*
+
 	public void checkCorrectness(int position, String correctWord)
 	{
 				
@@ -100,6 +100,7 @@ public class CharBox
 			return;
 		}
 		
+		
 	}
-	
+	*/
 }
