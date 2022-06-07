@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 
 @SuppressWarnings("serial")
@@ -35,10 +36,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	String correctAnswer[];
 	String playerNames[];
 	CharBox wordArea[][][];
+	JPanel gameMenu;
 	JPanel wordleQuestionArea[];
 	JPanel keyboard[];
 	JPanel bottomLayer;
-	JPanel gameMenu;
+	JLabel bottomLayerNamesLabel;
+	JLabel bottomLayerTimeLabel;
 	JTextField playerOneNameField;
 	JTextField playerTwoNameField;
 	JRadioButton onePlayerButton;
@@ -47,6 +50,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	JRadioButton addKeyboardNOButton;
 	JButton startGameButton;
 	JButton openStatsButton;
+	Timer timer;
 	int positionInWord[];
 	int enteredCharactersInWord[];
 	int numOfTries[];
@@ -64,8 +68,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		this.setVisible(true);
 		
-		this.setSize(new Dimension(550,550));
-		this.setMinimumSize(new Dimension(350,350));
+		this.setSize(new Dimension(400,250));
+		this.setMinimumSize(new Dimension(425,300));
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
@@ -252,7 +256,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(10,10,10,10);
+		gcon.insets = new Insets(10,10,5,10);
 
 		gameMenu.add(startGameButton, gcon);
 
@@ -264,7 +268,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(10,10,10,10);
+		gcon.insets = new Insets(10,10,5,10);
 
 		gameMenu.add(openStatsButton, gcon);
 		
@@ -391,11 +395,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		bottomLayer = new JPanel();
 		
-		bottomLayer.setPreferredSize(new Dimension ((530*playerAmount), 25));
-		bottomLayer.setMinimumSize(new Dimension ((330*playerAmount), 25));
+		bottomLayer.setPreferredSize(new Dimension ((530*playerAmount), 15));
+		bottomLayer.setMinimumSize(new Dimension ((330*playerAmount), 15));
 		
-		bottomLayer.setBackground(Color.green);
-				
+		bottomLayer.setBackground(new Color(18,18,18));
+
 		GridBagConstraints gcon = new GridBagConstraints();
 		
 		gcon.fill = GridBagConstraints.BOTH;
@@ -412,8 +416,39 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.gridwidth=2;
 		gcon.gridheight=1;
 		
-		this.add(bottomLayer, gcon);
+		bottomLayer.setLayout(new GridLayout(1,3));
+		bottomLayer.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+		
+		bottomLayerTimeLabel = new JLabel("Time: 0.00");
+		bottomLayerTimeLabel.setHorizontalAlignment(JLabel.RIGHT);
+		bottomLayerTimeLabel.setVerticalAlignment(JLabel.CENTER);
+		bottomLayerTimeLabel.setForeground(Color.white);
+		
+		bottomLayerNamesLabel = new JLabel();
+		bottomLayerNamesLabel.setHorizontalAlignment(JLabel.CENTER);
+		bottomLayerNamesLabel.setVerticalAlignment(JLabel.CENTER);
+		bottomLayerNamesLabel.setForeground(Color.white);
+		
+		if(playerAmount==1) {
+			bottomLayerNamesLabel.setText(playerNames[0]);
+		}
+		else
+		{
+			bottomLayerNamesLabel.setText(playerNames[0]+" vs "+playerNames[1]);
 
+		}
+		
+		bottomLayer.add(new JLabel(""));
+		bottomLayer.add(bottomLayerNamesLabel);
+		bottomLayer.add(bottomLayerTimeLabel);
+
+		
+		this.add(bottomLayer, gcon);
+		
+		timer = new Timer(1000, this);
+		timer.start(); 
+
+		
 	}
 
 	public void gameWon(int player){
@@ -435,9 +470,13 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	@Override
 	public void actionPerformed(ActionEvent event) 
 	{
+		
 		if(event.getSource() == startGameButton) {
 			if((!(playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name")))&&(playerAmount!=2||(!(playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name"))))) {
 				if(!gameStarted) {
+					
+					this.setSize(new Dimension(550,550));
+					this.setMinimumSize(new Dimension(350,350));
 					
 					gameStarted = true;
 					
@@ -503,9 +542,13 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			}
 			else
 			{
-				playerOneNameField.setText("Please Enter A Name");
+				if((playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name"))){
+					playerOneNameField.setText("Please Enter A Name");
+				}
 				if(playerTwoNameField.isEnabled()) {
-					playerTwoNameField.setText("Please Enter A Name");
+					if((playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name"))){
+						playerTwoNameField.setText("Please Enter A Name");
+					}
 				}
 			}
 		}
@@ -537,6 +580,48 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			}
 		}
 		
+		if(event.getSource() == timer) {
+			if(gameStarted) {
+				
+				String TimeString = bottomLayerTimeLabel.getText();
+				
+				if(!TimeString.equals("Time: Too Long")) {
+				
+					int minute = Integer.parseInt(TimeString.substring(6,7));
+					int tenSecond = Integer.parseInt(TimeString.substring(8,9));
+					int oneSecond = Integer.parseInt(TimeString.substring(9,10));
+					
+					if(oneSecond==9)
+					{
+						oneSecond=0;
+						if(tenSecond==9)
+						{
+							tenSecond=0;
+							if(minute==9)
+							{
+								bottomLayerTimeLabel.setText("Time: Too Long");
+								return;
+							}
+							else
+							{
+								minute++;
+							}
+						}
+						else
+						{
+							tenSecond++;
+						}
+					}
+					else
+					{
+						oneSecond++;
+					}
+
+					bottomLayerTimeLabel.setText("Time: "+minute+"."+tenSecond+oneSecond);
+					
+				}				
+			}
+		}		
 	}
 	
 	public void keyPressed(KeyEvent event) {
