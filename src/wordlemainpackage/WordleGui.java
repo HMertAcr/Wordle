@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,9 +118,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		playerAmount = 1;
 		
 		gameMenu = new JPanel();
-		GridBagLayout gbl = new GridBagLayout();
 		
-		gameMenu.setLayout(gbl);
+		gameMenu.setBackground(new Color(230,230,230));
+		
+		gameMenu.setLayout(new GridBagLayout());
 		
 		GridBagConstraints gcon = new GridBagConstraints();
 		
@@ -127,6 +129,15 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		startGameButton = new JButton();
 		openStatsButton = new JButton();
+		
+		startGameButton.setText("Start");
+		openStatsButton.setText("Stats");
+		
+		startGameButton.setBackground(new Color(60,60,60));
+		openStatsButton.setBackground(new Color(60,60,60));
+		
+		startGameButton.setForeground(Color.white);
+		openStatsButton.setForeground(Color.white);
 		
 		onePlayerButton = new JRadioButton();
 		twoPlayerButton = new JRadioButton();
@@ -136,9 +147,24 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		playerAmountGroup.add(twoPlayerButton);
 		
 		onePlayerButton.setSelected(true);
+		
+		onePlayerButton.setText("OnePlayer");
+		twoPlayerButton.setText("TwoPlayer");
+		
+		onePlayerButton.setBackground(new Color(230,230,230));
+		twoPlayerButton.setBackground(new Color(230,230,230));
+		
+		onePlayerButton.setForeground(Color.black);
+		twoPlayerButton.setForeground(Color.black);
 				
 		playerOneNameField = new JTextField();
 		playerTwoNameField = new JTextField();
+		
+		playerOneNameField.setBackground(Color.white);
+		playerTwoNameField.setBackground(Color.white);
+		
+		playerTwoNameField.setForeground(Color.black);
+		playerOneNameField.setForeground(Color.black);
 		
 		addKeyboardYESButton = new JRadioButton();
 		addKeyboardNOButton = new JRadioButton();
@@ -149,26 +175,30 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		addKeyboardNOButton.setSelected(true);
 		
-		onePlayerButton.setText("OnePlayer");
-		twoPlayerButton.setText("TwoPlayer");
-		
 		addKeyboardYESButton.setText("Yes");
 		addKeyboardNOButton.setText("No");
 		
-		startGameButton.setText("Start");
-		openStatsButton.setText("Stats");
+		addKeyboardYESButton.setBackground(new Color(230,230,230));
+		addKeyboardNOButton.setBackground(new Color(230,230,230));
+		
+		addKeyboardYESButton.setForeground(Color.black);
+		addKeyboardNOButton.setForeground(Color.black);
 		
 		JLabel enterPlayerNamesLabel = new JLabel("Enter Players");
 		JLabel enterIfKeyboardLabel = new JLabel("Do you want to add keyboard?");
-
-		enterPlayerNamesLabel.setText("Enter Players");
-		enterIfKeyboardLabel.setText("Do you want to add keyboard?");
-
+		
+		enterPlayerNamesLabel.setBackground(new Color(230,230,230));
+		enterIfKeyboardLabel.setBackground(new Color(230,230,230));
+		
+		enterPlayerNamesLabel.setForeground(Color.black);
+		enterIfKeyboardLabel.setForeground(Color.black);
+		
 		onePlayerButton.addActionListener(this);
 		twoPlayerButton.addActionListener(this);
 		startGameButton.addActionListener(this);
 		addKeyboardYESButton.addActionListener(this);
 		addKeyboardNOButton.addActionListener(this);
+		
 		
 		gcon.weightx=1;
 		gcon.weighty=3;
@@ -274,7 +304,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(10,10,0,5);
+		gcon.insets = new Insets(0,15,0,10);
 
 		gameMenu.add(openStatsButton, gcon);
 
@@ -286,14 +316,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(10,5,0,10);
+		gcon.insets = new Insets(0,5,0,15);
 
 		gameMenu.add(startGameButton, gcon);
 		
 		for(int i=0;i<9;i++)
 		{
 			gcon.weightx=1;
-			gcon.weighty=0.1;
+			gcon.weighty=0;
 			gcon.gridx=i;
 			gcon.gridy=6;
 			gcon.gridwidth=1;
@@ -693,13 +723,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		int labelHeight = metrics.getHeight();
 		int labelAscent = metrics.getAscent();
 
-				
+	    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		g2.setColor(buttonColor);
 		g2.fillRect(x, y, buttonWidth, buttonHeight);
 		
 		g2.setColor(labelColor);
 		g2.setFont(labelFont);
-		
 		g2.drawString(buttonToDraw.charLabel.getText(), x + (buttonWidth - labelWidth)/2, y + (buttonHeight - labelHeight)/2 + labelAscent);
 
 		
