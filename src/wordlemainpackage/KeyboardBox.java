@@ -15,12 +15,19 @@ public class KeyboardBox
 	public
 	JPanel KeyboardBoxPanel;
 	JLabel charLabel;
+	Color focusColor[];
 	
-	public KeyboardBox(String newLabelText)
+	public KeyboardBox(String newLabelText, int playerAmount)
 	{
 		
 		KeyboardBoxPanel = new JPanel();
-				
+		
+		if(playerAmount == 1) {
+			focusColor = new Color[]{new Color(0,0,0)};
+		}else {
+			focusColor = new Color[]{new Color(0,0,0), new Color(0,0,0)};
+		}
+		
 		KeyboardBoxPanel.setLayout(new GridLayout(1,1));
 		KeyboardBoxPanel.setBackground(new Color(0,0,0));
 
@@ -65,7 +72,7 @@ public class KeyboardBox
 
 		
 		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth(tempString);
-		int componentWidth = KeyboardBoxPanel.getWidth()-5;
+		int componentWidth = KeyboardBoxPanel.getWidth()-10;
 
 		double widthRatio = (double)componentWidth / (double)stringWidth;
 
@@ -77,30 +84,28 @@ public class KeyboardBox
 		charLabel.setFont(new Font(labelFont.getName(), Font.BOLD, fontSizeToUse));
 
 	}
-	/*
-
-	public void checkCorrectness(int position, String correctWord)
-	{
-				
-		String character = charLabel.getText();
+	
+	public void changeKeyboard(int focusedOn) {
 		
-		if(correctWord.contains(character))
-		{
-			if(correctWord.charAt(position) == character.charAt(0))
-			{
-				charBoxPanel.setBackground(new Color(85,140,80));
-				return;
-			}
-			charBoxPanel.setBackground(new Color(180,160,60));
-			return;
-		}
-		else
-		{
-			charBoxPanel.setBackground(new Color(60,60,60));
-			return;
-		}
-		
+		KeyboardBoxPanel.setBackground(focusColor[focusedOn-1]);
 		
 	}
-	*/
+
+	public void changeColor(Color newColor, int focusedOn)
+	{
+		
+		Color currentColor = KeyboardBoxPanel.getBackground();
+				
+		if(currentColor.equals(new Color(0,0,0))) {
+			focusColor[focusedOn-1] = newColor;
+		} else if(currentColor.equals(new Color(60,60,60)) && !newColor.equals(new Color(0,0,0))) {
+			focusColor[focusedOn-1] = newColor;
+		} else if(currentColor.equals(new Color(100,160,60)) && newColor.equals(new Color(85,140,80))) {
+			focusColor[focusedOn-1] = newColor;
+		}
+		
+		changeKeyboard(focusedOn);
+		
+	}
+	
 }
