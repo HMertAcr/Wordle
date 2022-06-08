@@ -22,7 +22,7 @@ public class KeyboardBox
 		KeyboardBoxPanel = new JPanel();
 				
 		KeyboardBoxPanel.setLayout(new GridLayout(1,1));
-		KeyboardBoxPanel.setBackground(Color.black);
+		KeyboardBoxPanel.setBackground(new Color(0,0,0));
 
 		charLabel = new JLabel();
 		charLabel.setText(newLabelText);
@@ -65,9 +65,9 @@ public class KeyboardBox
 
 		
 		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth(tempString);
-		int componentWidth = KeyboardBoxPanel.getWidth();
+		int componentWidth = KeyboardBoxPanel.getWidth()-5;
 
-		double widthRatio = (double)(((9*componentWidth)/10)) / (double)stringWidth;
+		double widthRatio = (double)componentWidth / (double)stringWidth;
 
 		int newFontSize = (int)(labelFont.getSize() * widthRatio);
 		int componentHeight = KeyboardBoxPanel.getHeight();

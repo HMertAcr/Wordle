@@ -23,7 +23,7 @@ public class CharBox
 		charBoxPanel = new JPanel();
 				
 		charBoxPanel.setLayout(new GridLayout(1,1));
-		charBoxPanel.setBackground(Color.black);
+		charBoxPanel.setBackground(new Color(0,0,0));
 
 		charLabel = new JLabel();
 		
@@ -57,13 +57,13 @@ public class CharBox
 				
 		Font labelFont = charLabel.getFont();
 		
-		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth("A");
-		int componentWidth = charBoxPanel.getWidth();
+		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth("W");
+		int componentWidth = charBoxPanel.getWidth()-5;
 
-		double widthRatio = (double)(((9*componentWidth)/10)-10) / (double)stringWidth;
+		double widthRatio = (double)componentWidth / (double)stringWidth;
 
 		int newFontSize = (int)(labelFont.getSize() * widthRatio);
-		int componentHeight = charBoxPanel.getHeight();
+		int componentHeight = charBoxPanel.getHeight()-5;
 
 		int fontSizeToUse = Math.min(newFontSize, componentHeight);
 
