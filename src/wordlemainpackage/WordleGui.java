@@ -66,6 +66,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	boolean addKeyboard;
 	boolean gameStarted;
 	boolean gameFinished[];
+	boolean pressedOnQuestionArea[];
 	boolean pressedOnKeyboardBox;
 	boolean draggingKeyboardBox;
 	int draggingX;
@@ -772,7 +773,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						positionInWord = new int[]{0};
 						numOfTries = new int[]{0};
 						gameFinished = new boolean[]{false};
-						
+						pressedOnQuestionArea = new boolean[]{false};
 						if(addKeyboard)
 						{
 							this.setSize(new Dimension(this.getWidth(), (16*(this.getHeight()/11))+15));
@@ -791,7 +792,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						positionInWord = new int[]{0,0};
 						numOfTries = new int[]{0,0};
 						gameFinished = new boolean[]{false,false};
-						
+						pressedOnQuestionArea = new boolean[]{false,false};
 						if(addKeyboard)
 						{
 							this.setSize(new Dimension((this.getWidth()-15)*2, (16*(this.getHeight()/11)+15)));
@@ -977,12 +978,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				if(clickedY>wordleQuestionArea[0].getY()&&clickedY<wordleQuestionArea[0].getY()+wordleQuestionArea[0].getHeight()) {
 					if (clickedX>wordleQuestionArea[0].getX() && clickedX<wordleQuestionArea[0].getY()+wordleQuestionArea[0].getWidth()){
 						if(!gameFinished[0]) {
-							changeFocus(1);
+							pressedOnQuestionArea[0]=true;
 						}
 					}
 					if (clickedX>wordleQuestionArea[1].getX() && clickedX<wordleQuestionArea[1].getX()+wordleQuestionArea[1].getWidth()){
 						if(!gameFinished[1]) {
-							changeFocus(2);
+							pressedOnQuestionArea[1]=true;
 						}
 					}
 				}
@@ -1018,17 +1019,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
-		@SuppressWarnings("unused")
-		int frameWidth = this.getWidth();
 
 		int clickedX = e.getX()-7;
 		int clickedY = e.getY()-32;
 		
 		//this is windows specific and maybe my computer specific
 		
-		if(draggingKeyboardBox) {
-			if(gameStarted) {
+		if(gameStarted) {
+			if(draggingKeyboardBox) {
 				if(playerAmount>1) {
 					if(clickedY>wordleQuestionArea[0].getY()&&clickedY<wordleQuestionArea[0].getY()+wordleQuestionArea[0].getHeight()) {
 						if (clickedX>wordleQuestionArea[0].getX() && clickedX<wordleQuestionArea[0].getY()+wordleQuestionArea[0].getWidth()){
@@ -1097,9 +1095,31 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						}
 					}
 				}
-			}			
-		}
-
+			}
+			else
+			{
+				if(playerAmount>1) {
+					if(clickedY>wordleQuestionArea[0].getY()&&clickedY<wordleQuestionArea[0].getY()+wordleQuestionArea[0].getHeight()) {
+						if (clickedX>wordleQuestionArea[0].getX() && clickedX<wordleQuestionArea[0].getY()+wordleQuestionArea[0].getWidth()){
+							if(!gameFinished[0]) {
+								if(pressedOnQuestionArea[0]==true)
+									changeFocus(1);
+							}
+						}
+						if (clickedX>wordleQuestionArea[1].getX() && clickedX<wordleQuestionArea[1].getX()+wordleQuestionArea[1].getWidth()){
+							if(!gameFinished[1]) {
+								if(pressedOnQuestionArea[1]==true)
+									changeFocus(2);
+								}
+							}
+						}
+					}
+				
+				for(int i=0; i<pressedOnQuestionArea.length; i++) {
+					pressedOnQuestionArea[i]=false;
+				}
+			}
+		}	
 		
 		draggingKeyboardBox = false;
 		pressedOnKeyboardBox = false;
