@@ -1,12 +1,7 @@
 package wordlemainpackage;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import java.awt.*;
+import javax.swing.*;
 
 public class CharBox
 {
@@ -28,8 +23,6 @@ public class CharBox
 		charLabel.setFont(new Font("SansSerif", Font.BOLD, 92));
 		charLabel.setForeground(Color.white);
 		
-		//charBoxPanel.setSize(100,100);
-		//charBoxPanel.setPreferredSize(new Dimension(100,100));
 		charLabel.setHorizontalAlignment(JLabel.CENTER);
 		charLabel.setVerticalAlignment(JLabel.CENTER);
 				
@@ -38,13 +31,15 @@ public class CharBox
 
 	}
 	
-	public void changeBoxText(String newLabelText) {
+	public void changeBoxText(String newLabelText)
+	{
 		
 		charLabel.setText(newLabelText);
 		
 	}
 	
-	public String getText() {
+	public String getText()
+	{
 		
 		return charLabel.getText();
 		
@@ -69,11 +64,13 @@ public class CharBox
 
 	}
 	
-	public void highlight() {
+	public void highlight()
+	{
 		charLabel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, new Color(180,160,60)));
 	}
 	
-	public void unHighlight() {
+	public void unHighlight()
+	{
 		charLabel.setBorder(BorderFactory.createEmptyBorder());
 	}
 	

@@ -10,7 +10,8 @@ public class wordleDictionary
 	public
 	ArrayList<String> Dictionary;
 	
-	public wordleDictionary(String fileLocation) {
+	public wordleDictionary(String fileLocation)
+	{
 	    try
 	    {
             File file = new File(fileLocation);
@@ -18,7 +19,8 @@ public class wordleDictionary
             
             Dictionary = new ArrayList<String>(1000);
             
-            while (reader.hasNextLine()) {
+            while (reader.hasNextLine())
+            {
 	            String line = reader.nextLine();
 	            Dictionary.add(line.toUpperCase());
 	        }
@@ -31,11 +33,13 @@ public class wordleDictionary
 	    }
     }
 	
-	public boolean contains(String word) {
+	public boolean contains(String word)
+	{
 		return Dictionary.contains(word);
 	}
 	
-	public String random() {
+	public String random()
+	{
 		int index = (int)(Math.random() * Dictionary.size());
 		return Dictionary.get(index);
 	}
