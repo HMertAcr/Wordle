@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class wordleDictionary
 {
+	
 	public
 	ArrayList<String> Dictionary;
 	

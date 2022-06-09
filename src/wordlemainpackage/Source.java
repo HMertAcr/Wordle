@@ -1,9 +1,11 @@
 package wordlemainpackage;
 
 
-public class Source {
+public class Source
+{
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		
 		wordleDictionary Dictionary = new wordleDictionary("dictionary.txt");
 		

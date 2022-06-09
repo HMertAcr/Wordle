@@ -6,8 +6,8 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class WordleGui extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, ComponentListener
-
 {
+	
 	public
 	wordleDictionary Dictionary;
 	String correctAnswer[];
@@ -30,6 +30,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	JButton startGameButton;
 	JButton openStatsButton;
 	Timer timer;
+	int secondsPassed;
 	int positionInWord[];
 	int enteredCharactersInWord[];
 	int numOfTries[];
@@ -38,6 +39,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	boolean addKeyboard;
 	boolean gameStarted;
 	boolean gameFinished[];
+	//boolean gameWon[];
 	boolean pressedOnQuestionArea[];
 	boolean pressedOnKeyboardBox;
 	boolean draggingKeyboardBox;
@@ -323,9 +325,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	{
 		
 		{
-			
-			focusedOn = 1;
-			
+						
 			this.remove(gameMenu);
 			
 			wordleGameArea = new JPanel();
@@ -336,14 +336,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			wordleGameArea.setLayout(new GridBagLayout());
 			GridBagConstraints gcon = new GridBagConstraints();
 			
-			correctAnswer = new String[playerAmount];
-			
-			for(int i=0; i<playerAmount; i++)
-			{
-				correctAnswer[i] = this.Dictionary.random();
-				System.out.println(correctAnswer[i]);
-			}
-			
 			wordleQuestionArea = new JPanel[playerAmount];
 			
 			GridLayout layout = new GridLayout(5,5);
@@ -353,6 +345,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 			for(int i=0; i<playerAmount; i++)
 			{
+				
+				System.out.println(correctAnswer[i]);
+				
 				wordleQuestionArea[i] = new JPanel();
 				
 				wordleQuestionArea[i].setPreferredSize(new Dimension (55, 55));
@@ -787,9 +782,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					
 					gameStarted = true;
 					
+					secondsPassed = 0;
+					focusedOn = 1;
+										
 					if(playerAmount==1)
 					{
-						
+						correctAnswer = new String[] {this.Dictionary.random(),this.Dictionary.random()};
 						playerNames = new String[] {playerOneNameField.getText()};
 						enteredCharactersInWord = new int[]{0};
 						positionInWord = new int[]{0};
@@ -809,6 +807,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					}
 					else
 					{
+						correctAnswer = new String[] {this.Dictionary.random(),this.Dictionary.random()};
 						playerNames = new String[] {playerOneNameField.getText(), playerTwoNameField.getText()};
 						enteredCharactersInWord = new int[]{0,0};
 						positionInWord = new int[]{0,0};
@@ -904,6 +903,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		{
 			if(gameStarted)
 			{
+				
+				secondsPassed++;
 				
 				String TimeString = bottomLayerTimeLabel.getText();
 				
