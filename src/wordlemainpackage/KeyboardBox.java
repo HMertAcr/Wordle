@@ -71,7 +71,7 @@ public class KeyboardBox
 
 		
 		int stringWidth = charLabel.getFontMetrics(labelFont).stringWidth(tempString);
-		int componentWidth = KeyboardBoxPanel.getWidth()-10;
+		int componentWidth = KeyboardBoxPanel.getWidth()-5;
 
 		double widthRatio = (double)componentWidth / (double)stringWidth;
 

@@ -39,7 +39,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	boolean addKeyboard;
 	boolean gameStarted;
 	boolean gameFinished[];
-	//boolean gameWon[];
+	boolean gameWon[];
 	boolean pressedOnQuestionArea[];
 	boolean pressedOnKeyboardBox;
 	boolean draggingKeyboardBox;
@@ -48,6 +48,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int draggingXOffset;
 	int draggingYOffset;
 	KeyboardBox draggedKeyboardBox;
+	Font messageFont;
+	int messageCordinates[][];
+	Font scoreFont;
+	int scoreCordinates[][];
 	
 	public WordleGui(wordleDictionary Dictionary)
 	{
@@ -318,6 +322,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 		gameMenu.revalidate();
 		gameMenu.repaint();
+		
 	}
 	
 	
@@ -539,16 +544,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 		
 	}
-
-	public void gameWon(int player)
-	{
-		System.out.print("Player "+(player+1)+" Won!");
-	}
-   
-	public void gameLost(int player)
-	{
-		System.out.print("Player "+(player+1)+" Lost!");
-	}
 	
 	public void changeFocus(int newFocus)
 	{
@@ -619,8 +614,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         			{
             			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
             			
-            			gameWon(focusedOn-1);
             			gameFinished[focusedOn-1]=true;
+            			calculateFontSize(focusedOn-1,"You Won!",0);
+            			gameWon[focusedOn-1]=true;
+            			this.repaint();
+            			
             			if(playerAmount==2)
             			{
                 			if(focusedOn<playerAmount)
@@ -656,8 +654,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         		else
         		{
         			
-        			gameLost(focusedOn-1);
         			gameFinished[focusedOn-1]=true;
+        			calculateFontSize(focusedOn-1,"You Lost!",0);
+        			gameWon[focusedOn-1]=false;
+        			this.repaint();
         			
         			if(playerAmount==2)
         			{
@@ -723,10 +723,13 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 	}
 	
-	public void paintKeyboardBoxManually(KeyboardBox buttonToDraw, int x, int y, Graphics g)
+	public void drawDraggedKeyboard(KeyboardBox buttonToDraw, int x, int y, Graphics g)
 	{
 		
 		Graphics2D g2 = (Graphics2D)g;
+		
+	    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+	    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		
 		int buttonWidth = buttonToDraw.KeyboardBoxPanel.getWidth();
 		int buttonHeight = buttonToDraw.KeyboardBoxPanel.getHeight();
@@ -739,27 +742,144 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		int labelWidth = metrics.stringWidth(labelText);
 		int labelHeight = metrics.getHeight();
 		int labelAscent = metrics.getAscent();
-
-	    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-	    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		g2.setColor(buttonColor);
 		g2.fillRect(x, y, buttonWidth, buttonHeight);
 		
 		g2.setColor(labelColor);
 		g2.setFont(labelFont);
-		g2.drawString(buttonToDraw.charLabel.getText(), x + (buttonWidth - labelWidth)/2, y + (buttonHeight - labelHeight)/2 + labelAscent);
+		g2.drawString(labelText, x + (buttonWidth - labelWidth)/2, y + (buttonHeight - labelHeight)/2 + labelAscent);
 		
 	}
 	
+	
+	public void calculateFontSize(int player, String message, int scoreValue)
+	{		
+		
+		String score = String.format("Score: %04d", scoreValue);
+		
+		int areaX = wordleQuestionArea[player].getX()+7;
+		int areaY = wordleQuestionArea[player].getY()+32;
+		
+		int areaWidth = wordleQuestionArea[player].getWidth();
+		int areaHeight = wordleQuestionArea[player].getHeight();
+				
+		int componentHeight = areaHeight/5;
+		int componentWidth = 9*areaWidth/10;
+		
+		int messageX = areaX + areaWidth/2 - componentWidth/2;
+		int messageY = areaY + 1*((areaHeight-componentHeight)/3);
+
+		int scoreX = areaX + areaWidth/2 - componentWidth/2;
+		int scoreY = areaY + 2*((areaHeight-componentHeight)/3);
+		
+		messageFont = new Font("SansSerif", Font.BOLD, 25);
+		scoreFont = new Font("SansSerif", Font.BOLD, 25);
+		
+		int messageWidth = getFontMetrics(messageFont).stringWidth(message);
+		int scoreWidth = getFontMetrics(scoreFont).stringWidth(score);
+		
+		double messageWidthRatio = (double)componentWidth / (double)messageWidth;
+		int messageNewFontSize = (int)(messageFont.getSize() * messageWidthRatio);
+		int messageFontSizeToUse = Math.min(messageNewFontSize, componentHeight);
+		
+		messageFont = new Font("SansSerif", Font.BOLD, messageFontSizeToUse);
+		messageWidth = getFontMetrics(messageFont).stringWidth(message);
+		
+		
+		double scoreWidthRatio = (double)componentWidth / (double)scoreWidth;
+		int scoreNewFontSize = (int)(scoreFont.getSize() * scoreWidthRatio);
+		int scoreFontSizeToUse = Math.min(scoreNewFontSize, componentHeight);
+		
+		scoreFont = new Font("SansSerif", Font.BOLD, scoreFontSizeToUse);
+		scoreWidth = getFontMetrics(scoreFont).stringWidth(score);
+		
+		int messageHeight = getFontMetrics(messageFont).getHeight();
+		int scoreHeight = getFontMetrics(scoreFont).getHeight();
+		
+		int messageAscent = getFontMetrics(messageFont).getAscent();
+		int scoreAscent = getFontMetrics(scoreFont).getAscent();
+		
+		
+		messageCordinates[player] = new int[]{messageX + (componentWidth - messageWidth)/2, messageY + (componentHeight - messageHeight)/2 + messageAscent};
+		scoreCordinates[player] = new int[]{scoreX + (componentWidth - scoreWidth)/2, scoreY + (componentHeight - scoreHeight)/2 + scoreAscent};
+		
+	}
+	
+	
+	public void displayStatus(int player, String message, int scoreValue, boolean antialiass,Graphics g)
+	{
+		
+		
+		String score = String.format("Score: %04d", scoreValue);
+		Graphics2D g2 = (Graphics2D)g;
+		
+		if(antialiass)
+		{
+		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		}
+		else
+		{
+		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+		    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		}
+
+		g2.setColor(new Color(225,50,50));
+		
+		g2.setFont(messageFont);
+		g2.drawString(message, messageCordinates[player][0], messageCordinates[player][1]);
+		
+		g2.setFont(scoreFont);
+		g2.drawString(score, scoreCordinates[player][0], scoreCordinates[player][1]);
+		
+	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
 		super.paintComponents(g);
-		if(draggingKeyboardBox)
+		
+		if(gameStarted)
 		{
-			paintKeyboardBoxManually(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
+			
+			if(draggingKeyboardBox)
+			{
+				drawDraggedKeyboard(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
+				for(int i=0;i<playerAmount;i++)
+				{
+					if(gameFinished[i])
+					{
+						if(gameWon[i])
+						{
+							displayStatus(i,"You Won!",0,false,g);
+						}
+						else
+						{
+							displayStatus(i,"You Lost!",0,false,g);
+						}
+					}
+				}
+			}
+			else
+			{
+				for(int i=0;i<playerAmount;i++)
+				{
+					if(gameFinished[i])
+					{
+						if(gameWon[i])
+						{
+							displayStatus(i,"You Won!",0,true,g);
+						}
+						else
+						{
+							displayStatus(i,"You Lost!",0,true,g);
+						}
+					}
+				}
+			}
+			
+
 		}
 	}
 	
@@ -793,7 +913,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						positionInWord = new int[]{0};
 						numOfTries = new int[]{0};
 						gameFinished = new boolean[]{false};
+						gameWon = new boolean[]{false};;
 						pressedOnQuestionArea = new boolean[]{false};
+						messageCordinates = new int[][]{{0,0}};
+						scoreCordinates = new int[][]{{0,0}};
+
 						if(addKeyboard)
 						{
 							this.setSize(new Dimension(this.getWidth(), (16*(this.getHeight()/11))+15));
@@ -813,7 +937,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						positionInWord = new int[]{0,0};
 						numOfTries = new int[]{0,0};
 						gameFinished = new boolean[]{false,false};
+						gameWon = new boolean[]{false,false};;
 						pressedOnQuestionArea = new boolean[]{false,false};
+						messageCordinates = new int[][]{{0,0},{0,0}};
+						scoreCordinates = new int[][]{{0,0},{0,0}};
+						
 						if(addKeyboard)
 						{
 							this.setSize(new Dimension((this.getWidth()-15)*2, (16*(this.getHeight()/11)+15)));
@@ -956,7 +1084,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 	    	if(event.getKeyCode() == KeyEvent.VK_BACK_SPACE)
 	    	{
-
 	    		pressBackspace();
 	    		
 	    		return;
@@ -964,7 +1091,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	    	
 	    	if(event.getKeyCode() == KeyEvent.VK_ENTER)
 	    	{
-	    		
 	    		pressEnter();
 	    		
 	    		return;
@@ -973,16 +1099,21 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	    	if (event.getKeyCode() == KeyEvent.VK_LEFT)
 	    	{
 	    		pressLeft();
+	    		
+	    		return;
 	    	}
 	    	
 	    	if (event.getKeyCode() == KeyEvent.VK_RIGHT)
 	    	{
 	    		pressRight();
+	    		
+	    		return;
 	    	}
 	    	
 	    	if ((event.getKeyChar() > 64 && event.getKeyChar() < 91) || (event.getKeyChar() > 96 && event.getKeyChar() < 123))
 	    	{
 	    		pressChar(event.getKeyChar()+"");
+	    		
 				return;
 	    	}
 			
@@ -1260,7 +1391,21 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					keyboardKeys[key].resizeText();
 				}
 			}
+			for(int i=0; i<playerAmount; i++)
+			{
+				if(gameFinished[i])
+				{
+					if(gameWon[i]) {
+						calculateFontSize(i,"You Won!",0);
+					}
+					else
+					{
+						calculateFontSize(i,"You Lost!",0);
+					}
+				}
+			}
 		}
+		this.repaint();
 	}
 	
 	@Override
