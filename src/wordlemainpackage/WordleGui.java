@@ -9,7 +9,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 {
 	
 	public
-	wordleDictionary Dictionary;
+	String dictionaryFileLocation;
+	String wordleScoreFileLocation;
+	wordleDictionary dictionary;
+	wordleScore score;
 	String correctAnswer[];
 	String playerNames[];
 	CharBox wordArea[][][];
@@ -36,6 +39,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int numOfTries[];
 	int playerAmount;
 	int focusedOn;
+	int finalScore[];
 	boolean addKeyboard;
 	boolean gameStarted;
 	boolean gameFinished[];
@@ -53,9 +57,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	Font scoreFont;
 	int scoreCordinates[][];
 	
-	public WordleGui(wordleDictionary Dictionary)
+	public WordleGui(String dictionaryFileLocation, String wordleScoreFileLocation)
 	{
-		this.Dictionary = Dictionary;
+		this.dictionaryFileLocation = dictionaryFileLocation;
+		this.wordleScoreFileLocation = wordleScoreFileLocation;
+		
+		dictionary = new wordleDictionary(this.dictionaryFileLocation);
 
 		gameStarted = false;
 		pressedOnKeyboardBox= false;
@@ -592,9 +599,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			{
 				enteredWord += wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].getText();
 			}
-			if(Dictionary.contains(enteredWord))
+			if(dictionary.contains(enteredWord))
 			{
-				
+				score.newGuess(focusedOn-1,enteredWord,secondsPassed);
     			for(int i=0; i<5; i++)
     			{
     				wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].checkCorrectness(i, correctAnswer[focusedOn-1]);
@@ -617,6 +624,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			gameFinished[focusedOn-1]=true;
             			calculateFontSize(focusedOn-1,"You Won!",0);
             			gameWon[focusedOn-1]=true;
+            			score.playerFinishedGame(focusedOn-1);
+            			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
             			this.repaint();
             			
             			if(playerAmount==2)
@@ -657,6 +666,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         			gameFinished[focusedOn-1]=true;
         			calculateFontSize(focusedOn-1,"You Lost!",0);
         			gameWon[focusedOn-1]=false;
+        			score.playerFinishedGame(focusedOn-1);
+        			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
         			this.repaint();
         			
         			if(playerAmount==2)
@@ -852,11 +863,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					{
 						if(gameWon[i])
 						{
-							displayStatus(i,"You Won!",0,false,g);
+							displayStatus(i,"You Won!",finalScore[i],false,g);
 						}
 						else
 						{
-							displayStatus(i,"You Lost!",0,false,g);
+							displayStatus(i,"You Lost!",finalScore[i],false,g);
 						}
 					}
 				}
@@ -869,11 +880,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					{
 						if(gameWon[i])
 						{
-							displayStatus(i,"You Won!",0,true,g);
+							displayStatus(i,"You Won!",finalScore[i],true,g);
 						}
 						else
 						{
-							displayStatus(i,"You Lost!",0,true,g);
+							displayStatus(i,"You Lost!",finalScore[i],true,g);
 						}
 					}
 				}
@@ -907,17 +918,21 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 										
 					if(playerAmount==1)
 					{
-						correctAnswer = new String[] {this.Dictionary.random(),this.Dictionary.random()};
+						
+						correctAnswer = new String[] {this.dictionary.random(),this.dictionary.random()};
 						playerNames = new String[] {playerOneNameField.getText()};
 						enteredCharactersInWord = new int[]{0};
 						positionInWord = new int[]{0};
 						numOfTries = new int[]{0};
+						finalScore = new int[]{0};
 						gameFinished = new boolean[]{false};
 						gameWon = new boolean[]{false};;
 						pressedOnQuestionArea = new boolean[]{false};
 						messageCordinates = new int[][]{{0,0}};
 						scoreCordinates = new int[][]{{0,0}};
-
+						
+						score = new wordleScore(wordleScoreFileLocation,1,playerNames,correctAnswer);
+						
 						if(addKeyboard)
 						{
 							this.setSize(new Dimension(this.getWidth(), (16*(this.getHeight()/11))+15));
@@ -931,16 +946,19 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					}
 					else
 					{
-						correctAnswer = new String[] {this.Dictionary.random(),this.Dictionary.random()};
+						correctAnswer = new String[] {this.dictionary.random(),this.dictionary.random()};
 						playerNames = new String[] {playerOneNameField.getText(), playerTwoNameField.getText()};
 						enteredCharactersInWord = new int[]{0,0};
 						positionInWord = new int[]{0,0};
 						numOfTries = new int[]{0,0};
+						finalScore = new int[]{0,0};
 						gameFinished = new boolean[]{false,false};
 						gameWon = new boolean[]{false,false};;
 						pressedOnQuestionArea = new boolean[]{false,false};
 						messageCordinates = new int[][]{{0,0},{0,0}};
 						scoreCordinates = new int[][]{{0,0},{0,0}};
+						
+						score = new wordleScore(wordleScoreFileLocation,2,playerNames,correctAnswer);
 						
 						if(addKeyboard)
 						{
