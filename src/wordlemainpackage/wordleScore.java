@@ -1,6 +1,5 @@
 package wordlemainpackage;
 
-import java.awt.Color;
 import java.io.*;
 import java.util.*;
 
@@ -25,22 +24,32 @@ public class wordleScore {
 	//1 = foundInWord yellow
 	//2 = foundPlace green
 	
-	public wordleScore(String fileLocation, int pAmount, String[] pNames, String[] pCorrectAnswers)
+	public wordleScore(String fileLocation)
 	{
 		
 		scoreFileLocation = fileLocation;
+		scoreList = new ArrayList<scoreEntry>(200);
+		
+        guessedCharactersAmount = new int[26];
+        askedCharactersAmount= new int[26];
+        
+        readFile();
+        Collections.sort(scoreList,Comparator.reverseOrder());
+		writeToFile();
+		readFile();
+        
+	}
+	
+	public void setNewPlayers(int pAmount, String[] pNames, String[] pCorrectAnswers)
+	{
+		
 		playerAmount = pAmount;
 		playerScores = new double[playerAmount];
 		playerNames = pNames;
 		playerCorrectAnswers = pCorrectAnswers;
 		
 		progressState = new int[playerAmount][5];
-		
-		scoreList = new ArrayList<scoreEntry>(200);
-		
-        guessedCharactersAmount = new int[26];
-        askedCharactersAmount= new int[26];
-        
+		        
         readFile();
         
         for(int i=0;i<playerAmount;i++)
@@ -136,6 +145,35 @@ public class wordleScore {
 	{
 		scoreList.add(new scoreEntry(playerNames[player], String.format("%04d",(int)playerScores[player]), playerCorrectAnswers[player]));
         Collections.sort(scoreList,Comparator.reverseOrder());
+	}
+	
+	public scoreEntry[] getHighscore()
+	{
+		scoreEntry[] highscore = new scoreEntry[10];
+		
+		if(scoreList.size()>10)
+		{
+			for(int i=0;i<10;i++)
+			{
+				highscore[i] = scoreList.get(i);
+			}
+		}
+		else
+		{
+			for(int i=0;i<scoreList.size();i++)
+			{
+				highscore[i] = scoreList.get(i);
+			}
+			
+			for(int i=scoreList.size();i<10;i++)
+			{
+				highscore[i] = new scoreEntry("","","");
+			}
+			
+		}
+
+		
+		return highscore;
 	}
 	
 	public void readFile()

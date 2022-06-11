@@ -17,6 +17,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	String playerNames[];
 	CharBox wordArea[][][];
 	JPanel gameMenu;
+	JPanel statsMenu;
 	JPanel wordleGameArea;
 	JPanel wordleQuestionArea[];
 	JPanel keyboard;
@@ -32,6 +33,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	JRadioButton addKeyboardNOButton;
 	JButton startGameButton;
 	JButton openStatsButton;
+	JButton backButton;
+	ResizableTextPanel[] highScoreGrids;
 	Timer timer;
 	int secondsPassed;
 	int positionInWord[];
@@ -42,6 +45,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int finalScore[];
 	boolean addKeyboard;
 	boolean gameStarted;
+	boolean showingStatsMenu;
 	boolean gameFinished[];
 	boolean gameWon[];
 	boolean pressedOnQuestionArea[];
@@ -56,6 +60,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int messageCordinates[][];
 	Font scoreFont;
 	int scoreCordinates[][];
+	scoreEntry highscores[];
 	
 	public WordleGui(String dictionaryFileLocation, String wordleScoreFileLocation)
 	{
@@ -63,8 +68,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		this.wordleScoreFileLocation = wordleScoreFileLocation;
 		
 		dictionary = new wordleDictionary(this.dictionaryFileLocation);
-
+		score = new wordleScore(wordleScoreFileLocation);
+		
 		gameStarted = false;
+		showingStatsMenu = false;
 		pressedOnKeyboardBox= false;
 		draggingKeyboardBox = false;
 		draggingX = 0;
@@ -72,8 +79,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		this.setVisible(true);
 		
-		this.setSize(new Dimension(450,250));
-		this.setMinimumSize(new Dimension(425,300));
+		this.setMinimumSize(new Dimension(450,325));
+		this.setSize(new Dimension(500,350));
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
@@ -182,6 +189,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		onePlayerButton.addActionListener(this);
 		twoPlayerButton.addActionListener(this);
 		startGameButton.addActionListener(this);
+		openStatsButton.addActionListener(this);
 		addKeyboardYESButton.addActionListener(this);
 		addKeyboardNOButton.addActionListener(this);
 		
@@ -332,6 +340,83 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 	}
 	
+	private void startStats()
+	{
+		
+		statsMenu = new JPanel();
+		
+		statsMenu.setBackground(new Color(230,230,230));
+		
+		statsMenu.setLayout(new GridBagLayout());
+		
+		GridBagConstraints gcon = new GridBagConstraints();
+		
+		this.remove(gameMenu);
+		this.add(statsMenu);
+		
+		backButton = new JButton();
+		backButton.setText("Back");
+		backButton.addActionListener(this);
+		
+		JPanel highscorePanel = new JPanel(new GridLayout(11,2,2,2));
+		
+		highscorePanel.setBackground(new Color(0,0,0));
+		highscorePanel.setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
+		
+		highScoreGrids = new ResizableTextPanel[33];
+		
+		highScoreGrids[0] = new ResizableTextPanel("Name:",new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+		highScoreGrids[1] = new ResizableTextPanel("Score:",new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+		highScoreGrids[2] = new ResizableTextPanel("Word:",new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+		
+		highscorePanel.add(highScoreGrids[0].panel);
+		highscorePanel.add(highScoreGrids[1].panel);
+		highscorePanel.add(highScoreGrids[2].panel);
+		
+		for(int i=0;i<10;i++)
+		{
+			
+			highScoreGrids[3+(i*3)+0] = new ResizableTextPanel(highscores[i].scoreListNames,new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+			highScoreGrids[3+(i*3)+1] = new ResizableTextPanel(highscores[i].scoreListScores,new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+			highScoreGrids[3+(i*3)+2] = new ResizableTextPanel(highscores[i].scoreListWords,new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+			
+			highscorePanel.add(highScoreGrids[3+(i*3)+0].panel);
+			highscorePanel.add(highScoreGrids[3+(i*3)+1].panel);
+			highscorePanel.add(highScoreGrids[3+(i*3)+2].panel);
+			
+		}
+		
+		
+		highscorePanel.setPreferredSize(new Dimension(100,300));
+		highscorePanel.setMinimumSize(new Dimension(100,300));
+
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=0;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		statsMenu.add(backButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=1;
+		gcon.gridy=0;
+		gcon.gridwidth=3;
+		gcon.gridheight=10;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		statsMenu.add(highscorePanel, gcon);
+		
+		statsMenu.revalidate();
+		statsMenu.repaint();
+	}
 	
 	public void startWordle()
 	{
@@ -901,9 +986,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		if(event.getSource() == startGameButton)
 		{
 			if((!(playerOneNameField.getText().equals("")||playerOneNameField.getText().equals("Please Enter A Name")
-					||playerOneNameField.getText().equals("Name Too Long")||playerOneNameField.getText().length()>20))
+					||playerOneNameField.getText().equals("Name Too Long")||playerOneNameField.getText().length()>10))
 						&&((playerAmount!=2||(!(playerTwoNameField.getText().equals("")||playerTwoNameField.getText().equals("Please Enter A Name")
-								||playerTwoNameField.getText().equals("Name Too Long")||playerTwoNameField.getText().length()>20)))))
+								||playerTwoNameField.getText().equals("Name Too Long")||playerTwoNameField.getText().length()>10)))))
 			{
 				if(!gameStarted)
 				{
@@ -931,7 +1016,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						messageCordinates = new int[][]{{0,0}};
 						scoreCordinates = new int[][]{{0,0}};
 						
-						score = new wordleScore(wordleScoreFileLocation,1,playerNames,correctAnswer);
+						score.setNewPlayers(1,playerNames,correctAnswer);
 						
 						if(addKeyboard)
 						{
@@ -958,7 +1043,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						messageCordinates = new int[][]{{0,0},{0,0}};
 						scoreCordinates = new int[][]{{0,0},{0,0}};
 						
-						score = new wordleScore(wordleScoreFileLocation,2,playerNames,correctAnswer);
+						score.setNewPlayers(2,playerNames,correctAnswer);
 						
 						if(addKeyboard)
 						{
@@ -987,7 +1072,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				}
 				else
 				{
-					if((playerOneNameField.getText().length()>20))
+					if((playerOneNameField.getText().length()>10))
 					{
 						playerOneNameField.setText("Name Too Long");
 					}
@@ -1001,13 +1086,40 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					}
 					else
 					{
-						if((playerTwoNameField.getText().length()>20))
+						if((playerTwoNameField.getText().length()>10))
 						{
 							playerTwoNameField.setText("Name Too Long");
 						}
 					}
 				}
 			}
+		}
+		
+		if(event.getSource() == openStatsButton)
+		{
+			showingStatsMenu = true;
+			this.setMinimumSize(new Dimension(475,500));
+			this.setSize(new Dimension(550,600));
+			
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+			
+			highscores = score.getHighscore();
+			startStats();
+		}
+		
+		if(event.getSource() == backButton)
+		{
+
+			showingStatsMenu = false;
+			this.setMinimumSize(new Dimension(450,325));
+			this.setSize(new Dimension(500,350));
+			
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+			
+			this.remove(statsMenu);
+			startMenu();
 		}
 		
 		if(event.getSource() == onePlayerButton)
@@ -1094,7 +1206,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			}
 		}		
 	}
-	
+
 	public void keyPressed(KeyEvent event)
 	{
 		if(gameStarted && !gameFinished[focusedOn-1])
@@ -1177,6 +1289,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					{
 						if(!gameFinished[1])
 						{
+							
 							pressedOnQuestionArea[1]=true;
 						}
 					}
@@ -1201,13 +1314,26 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						int currentKeyWidth = keyboardKeys[i].KeyboardBoxPanel.getWidth();
 						int currentKeyHeight = keyboardKeys[i].KeyboardBoxPanel.getHeight();
 						
-						if(clickedX>(keyboardX+currentKeyX)&&clickedX<(keyboardX+currentKeyX+currentKeyWidth)&&clickedY>(keyboardY+currentKeyY)&&clickedY<(keyboardY+currentKeyY+currentKeyHeight))
+						boolean bothFinished = true;
+						
+						for(int j=0;j<gameFinished.length;j++)
 						{
-							pressedOnKeyboardBox = true;
-							draggedKeyboardBox = keyboardKeys[i];
-							draggingXOffset = clickedX-(keyboardX+currentKeyX);
-							draggingYOffset = clickedY-(keyboardY+currentKeyY);
-							break;
+							if(!gameFinished[j])
+							{
+								bothFinished = false;
+							}
+						}
+						
+						if(!bothFinished)
+						{
+							if(clickedX>(keyboardX+currentKeyX)&&clickedX<(keyboardX+currentKeyX+currentKeyWidth)&&clickedY>(keyboardY+currentKeyY)&&clickedY<(keyboardY+currentKeyY+currentKeyHeight))
+							{
+								pressedOnKeyboardBox = true;
+								draggedKeyboardBox = keyboardKeys[i];
+								draggingXOffset = clickedX-(keyboardX+currentKeyX);
+								draggingYOffset = clickedY-(keyboardY+currentKeyY);
+								break;
+							}
 						}
 					}
 				}
@@ -1420,6 +1546,16 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					{
 						calculateFontSize(i,"You Lost!",0);
 					}
+				}
+			}
+		}
+		else
+		{
+			if(showingStatsMenu)
+			{
+				for(int i=0;i<33;i++)
+				{
+					highScoreGrids[i].resizeText();
 				}
 			}
 		}
