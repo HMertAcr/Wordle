@@ -11,8 +11,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public
 	String dictionaryFileLocation;
 	String wordleScoreFileLocation;
-	wordleDictionary dictionary;
-	wordleScore score;
+	WordleDictionary dictionary;
+	WordleScore score;
 	String correctAnswer[];
 	String playerNames[];
 	CharBox wordArea[][][];
@@ -33,8 +33,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	JRadioButton addKeyboardNOButton;
 	JButton startGameButton;
 	JButton openStatsButton;
-	JButton backButton;
+	ResizableButton backButton;
 	ResizableTextPanel[] highScoreGrids;
+	ResizableTextPanel[] MostGuessedCharGrids;
+	ResizableTextPanel[] MostAskedCharGrids;
+	ResizableTextPanel highscoreTitle;
+	ResizableTextPanel mostGuessedTitle;
+	ResizableTextPanel mostAskedTitle;
+	ResizableTextPanel createdBy;
 	Timer timer;
 	int secondsPassed;
 	int positionInWord[];
@@ -60,15 +66,17 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int messageCordinates[][];
 	Font scoreFont;
 	int scoreCordinates[][];
-	scoreEntry highscores[];
+	ScoreEntry highscores[];
+	CharAmount mostGuessedCharacters[];
+	CharAmount mostAskedCharacters[];
 	
 	public WordleGui(String dictionaryFileLocation, String wordleScoreFileLocation)
 	{
 		this.dictionaryFileLocation = dictionaryFileLocation;
 		this.wordleScoreFileLocation = wordleScoreFileLocation;
 		
-		dictionary = new wordleDictionary(this.dictionaryFileLocation);
-		score = new wordleScore(wordleScoreFileLocation);
+		dictionary = new WordleDictionary(this.dictionaryFileLocation);
+		score = new WordleScore(wordleScoreFileLocation);
 		
 		gameStarted = false;
 		showingStatsMenu = false;
@@ -345,8 +353,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		statsMenu = new JPanel();
 		
-		statsMenu.setBackground(new Color(230,230,230));
-		
+		statsMenu.setBackground(new Color(60,60,60));
+
 		statsMenu.setLayout(new GridBagLayout());
 		
 		GridBagConstraints gcon = new GridBagConstraints();
@@ -354,20 +362,25 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		this.remove(gameMenu);
 		this.add(statsMenu);
 		
-		backButton = new JButton();
+		backButton = new ResizableButton();
 		backButton.setText("Back");
 		backButton.addActionListener(this);
+		backButton.setPrefferedTextSize(8);
 		
-		JPanel highscorePanel = new JPanel(new GridLayout(11,2,2,2));
+		backButton.setBackground(new Color(0,0,0));
+		backButton.setForeground(new Color(255,255,255));
+		backButton.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
 		
-		highscorePanel.setBackground(new Color(0,0,0));
-		highscorePanel.setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
+		JPanel highscorePanel = new JPanel(new GridLayout(11,3,2,2));
+		
+		highscorePanel.setBackground(new Color(255,255,255));
+		highscorePanel.setBorder(BorderFactory.createMatteBorder(1,2,1,2,new Color(255,255,255)));
 		
 		highScoreGrids = new ResizableTextPanel[33];
 		
-		highScoreGrids[0] = new ResizableTextPanel("Name:",new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
-		highScoreGrids[1] = new ResizableTextPanel("Score:",new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
-		highScoreGrids[2] = new ResizableTextPanel("Word:",new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+		highScoreGrids[0] = new ResizableTextPanel("Name:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		highScoreGrids[1] = new ResizableTextPanel("Score:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		highScoreGrids[2] = new ResizableTextPanel("Word:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
 		
 		highscorePanel.add(highScoreGrids[0].panel);
 		highscorePanel.add(highScoreGrids[1].panel);
@@ -376,9 +389,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		for(int i=0;i<10;i++)
 		{
 			
-			highScoreGrids[3+(i*3)+0] = new ResizableTextPanel(highscores[i].scoreListNames,new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
-			highScoreGrids[3+(i*3)+1] = new ResizableTextPanel(highscores[i].scoreListScores,new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
-			highScoreGrids[3+(i*3)+2] = new ResizableTextPanel(highscores[i].scoreListWords,new Color(255,255,255),new Color(0,0,0),new Font("SansSerif", Font.PLAIN, 25),5,0,0);
+			highScoreGrids[3+(i*3)+0] = new ResizableTextPanel(highscores[i].scoreListNames,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
+			highScoreGrids[3+(i*3)+1] = new ResizableTextPanel(highscores[i].scoreListScores,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
+			highScoreGrids[3+(i*3)+2] = new ResizableTextPanel(highscores[i].scoreListWords,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
 			
 			highscorePanel.add(highScoreGrids[3+(i*3)+0].panel);
 			highscorePanel.add(highScoreGrids[3+(i*3)+1].panel);
@@ -386,10 +399,62 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 		}
 		
+		MostGuessedCharGrids = new ResizableTextPanel[12];
+		MostAskedCharGrids = new ResizableTextPanel[12];
 		
-		highscorePanel.setPreferredSize(new Dimension(100,300));
-		highscorePanel.setMinimumSize(new Dimension(100,300));
+		JPanel MostGuessedCharPanel = new JPanel(new GridLayout(6,2,2,2));
+		JPanel MostAskedCharPanel = new JPanel(new GridLayout(6,2,2,2));
+		
+		MostGuessedCharPanel.setBackground(new Color(255,255,255));
+		MostGuessedCharPanel.setBorder(BorderFactory.createMatteBorder(1,2,1,2,new Color(255,255,255)));
+		
+		MostAskedCharPanel.setBackground(new Color(255,255,255));
+		MostAskedCharPanel.setBorder(BorderFactory.createMatteBorder(1,2,1,2,new Color(255,255,255)));
+		
+		MostGuessedCharGrids[0] = new ResizableTextPanel("Character:",new Color(0,0,0),new  Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+		MostGuessedCharGrids[1] = new ResizableTextPanel("Times:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
 
+		MostGuessedCharPanel.add(MostGuessedCharGrids[0].panel);
+		MostGuessedCharPanel.add(MostGuessedCharGrids[1].panel);
+		
+		for(int i=0;i<5;i++)
+		{
+			
+			MostGuessedCharGrids[2+(i*2)+0] = new ResizableTextPanel(mostGuessedCharacters[i].character,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			MostGuessedCharGrids[2+(i*2)+1] = new ResizableTextPanel(mostGuessedCharacters[i].amount+"",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			
+			MostGuessedCharPanel.add(MostGuessedCharGrids[2+(i*2)+0].panel);
+			MostGuessedCharPanel.add(MostGuessedCharGrids[2+(i*2)+1].panel);
+			
+		}
+		
+		MostAskedCharGrids[0] = new ResizableTextPanel("Character:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+		MostAskedCharGrids[1] = new ResizableTextPanel("Times:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+
+		MostAskedCharPanel.add(MostAskedCharGrids[0].panel);
+		MostAskedCharPanel.add(MostAskedCharGrids[1].panel);
+		
+		for(int i=0;i<5;i++)
+		{
+			
+			MostAskedCharGrids[2+(i*2)+0] = new ResizableTextPanel(mostAskedCharacters[i].character,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			MostAskedCharGrids[2+(i*2)+1] = new ResizableTextPanel(mostAskedCharacters[i].amount+"",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			
+			MostAskedCharPanel.add(MostAskedCharGrids[2+(i*2)+0].panel);
+			MostAskedCharPanel.add(MostAskedCharGrids[2+(i*2)+1].panel);
+			
+		}
+		
+		highscoreTitle = new ResizableTextPanel("HIGHSCORES:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		mostGuessedTitle = new ResizableTextPanel("Guessed Words Included:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		mostAskedTitle = new ResizableTextPanel("Asked Words Included:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		createdBy = new ResizableTextPanel("Created by MAGIC",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
+		
+		highscoreTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
+		mostGuessedTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
+		mostAskedTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
+		createdBy.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
+		
 		gcon.weightx=1;
 		gcon.weighty=1;
 		gcon.gridx=0;
@@ -398,21 +463,177 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,0,0,0);
+		gcon.insets = new Insets(10,10,10,10);
+		
+		backButton.setPreferredSize(new Dimension(100,25));
+		backButton.setMinimumSize(new Dimension(100,25));
 		
 		statsMenu.add(backButton, gcon);
 		
 		gcon.weightx=1;
 		gcon.weighty=1;
-		gcon.gridx=1;
-		gcon.gridy=0;
-		gcon.gridwidth=3;
-		gcon.gridheight=10;
+		gcon.gridx=0;
+		gcon.gridy=1;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,10,0,10);
+		
+		mostGuessedTitle.panel.setPreferredSize(new Dimension(100,25));
+		mostGuessedTitle.panel.setMinimumSize(new Dimension(100,25));
+		
+		statsMenu.add(mostGuessedTitle.panel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=2;
+		gcon.gridwidth=1;
+		gcon.gridheight=6;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+		
+		MostGuessedCharPanel.setPreferredSize(new Dimension(100,150));
+		MostGuessedCharPanel.setMinimumSize(new Dimension(50,150));
+		
+		statsMenu.add(MostGuessedCharPanel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=3;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
 		gcon.anchor=GridBagConstraints.CENTER;
 		gcon.fill=GridBagConstraints.BOTH;
 		gcon.insets = new Insets(0,0,0,0);
 		
+		statsMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=4;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		statsMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=5;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		statsMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=6;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		statsMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=7;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		statsMenu.add(new JLabel(), gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=1;
+		gcon.gridy=0;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+		
+		highscoreTitle.panel.setPreferredSize(new Dimension(100,25));
+		highscoreTitle.panel.setMinimumSize(new Dimension(100,25));
+		
+		statsMenu.add(highscoreTitle.panel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=1;
+		gcon.gridy=1;
+		gcon.gridwidth=1;
+		gcon.gridheight=7;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,10,10,10);
+		
+		highscorePanel.setPreferredSize(new Dimension(100,175));
+		highscorePanel.setMinimumSize(new Dimension(100,175));
+		
 		statsMenu.add(highscorePanel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=0;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+		
+		mostAskedTitle.panel.setPreferredSize(new Dimension(100,25));
+		mostAskedTitle.panel.setMinimumSize(new Dimension(100,25));
+		
+		statsMenu.add(mostAskedTitle.panel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=1;
+		gcon.gridwidth=1;
+		gcon.gridheight=6;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,10,0,10);
+		
+		MostAskedCharPanel.setPreferredSize(new Dimension(100,150));
+		MostAskedCharPanel.setMinimumSize(new Dimension(100,150));
+		
+		statsMenu.add(MostAskedCharPanel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=7;
+		gcon.gridwidth=1;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+		
+		createdBy.panel.setPreferredSize(new Dimension(100,25));
+		createdBy.panel.setMinimumSize(new Dimension(100,25));
+		
+		statsMenu.add(createdBy.panel, gcon);
 		
 		statsMenu.revalidate();
 		statsMenu.repaint();
@@ -1098,13 +1319,15 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		if(event.getSource() == openStatsButton)
 		{
 			showingStatsMenu = true;
-			this.setMinimumSize(new Dimension(475,500));
-			this.setSize(new Dimension(550,600));
+			this.setMinimumSize(new Dimension(1000,625));
+			this.setSize(new Dimension(1000,625));
 			
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 			
 			highscores = score.getHighscore();
+			mostAskedCharacters = score.getMostGuessed();
+			mostGuessedCharacters = score.getMostAsked();
 			startStats();
 		}
 		
@@ -1209,6 +1432,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 	public void keyPressed(KeyEvent event)
 	{
+		System.out.print(this.getSize());
 		if(gameStarted && !gameFinished[focusedOn-1])
 		{
 			
@@ -1557,6 +1781,19 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				{
 					highScoreGrids[i].resizeText();
 				}
+				for(int i=0;i<12;i++)
+				{
+					MostGuessedCharGrids[i].resizeText();
+				}
+				for(int i=0;i<12;i++)
+				{
+					MostAskedCharGrids[i].resizeText();
+				}
+				highscoreTitle.resizeText();
+				mostGuessedTitle.resizeText();
+				mostAskedTitle.resizeText();
+				createdBy.resizeText();
+				backButton.resizeText();
 			}
 		}
 		this.repaint();

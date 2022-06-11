@@ -3,13 +3,13 @@ package wordlemainpackage;
 import java.io.*;
 import java.util.*;
 
-public class wordleDictionary
+public class WordleDictionary
 {
 	
 	public
 	ArrayList<String> Dictionary;
 	
-	public wordleDictionary(String fileLocation)
+	public WordleDictionary(String fileLocation)
 	{
 	    try
 	    {

@@ -1,19 +1,19 @@
 package wordlemainpackage;
 
-public class scoreEntry implements Comparable<scoreEntry>
+public class ScoreEntry implements Comparable<ScoreEntry>
 {
 	String scoreListNames;
 	String scoreListScores;
 	String scoreListWords;
 	
-	public scoreEntry()
+	public ScoreEntry()
 	{
 		scoreListNames = "";
 		scoreListScores = "";
 		scoreListWords = "";
 	}
 	
-	public scoreEntry(String Name, String Score, String Word)
+	public ScoreEntry(String Name, String Score, String Word)
 	{
 		scoreListNames = Name;
 		scoreListScores = Score;
@@ -21,7 +21,7 @@ public class scoreEntry implements Comparable<scoreEntry>
 	}
 
 	@Override
-	public int compareTo(scoreEntry se) {
+	public int compareTo(ScoreEntry se) {
 		if(Integer.parseInt(this.scoreListScores)>Integer.parseInt(se.scoreListScores)) 
 		{
 			return 1;

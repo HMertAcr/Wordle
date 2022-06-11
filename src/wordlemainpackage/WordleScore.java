@@ -3,13 +3,13 @@ package wordlemainpackage;
 import java.io.*;
 import java.util.*;
 
-public class wordleScore {
+public class WordleScore {
 	public
 	
 	String scoreFileLocation;
 	File scoreFile;
 	
-	ArrayList<scoreEntry> scoreList;
+	ArrayList<ScoreEntry> scoreList;
 	
 	int guessedCharactersAmount[];
 	int askedCharactersAmount[];
@@ -24,11 +24,11 @@ public class wordleScore {
 	//1 = foundInWord yellow
 	//2 = foundPlace green
 	
-	public wordleScore(String fileLocation)
+	public WordleScore(String fileLocation)
 	{
 		
 		scoreFileLocation = fileLocation;
-		scoreList = new ArrayList<scoreEntry>(200);
+		scoreList = new ArrayList<ScoreEntry>(200);
 		
         guessedCharactersAmount = new int[26];
         askedCharactersAmount= new int[26];
@@ -143,13 +143,13 @@ public class wordleScore {
 	
 	public void addScoreToList(int player)
 	{
-		scoreList.add(new scoreEntry(playerNames[player], String.format("%04d",(int)playerScores[player]), playerCorrectAnswers[player]));
+		scoreList.add(new ScoreEntry(playerNames[player], String.format("%04d",(int)playerScores[player]), playerCorrectAnswers[player]));
         Collections.sort(scoreList,Comparator.reverseOrder());
 	}
 	
-	public scoreEntry[] getHighscore()
+	public ScoreEntry[] getHighscore()
 	{
-		scoreEntry[] highscore = new scoreEntry[10];
+		ScoreEntry[] highscore = new ScoreEntry[10];
 		
 		if(scoreList.size()>10)
 		{
@@ -167,13 +167,42 @@ public class wordleScore {
 			
 			for(int i=scoreList.size();i<10;i++)
 			{
-				highscore[i] = new scoreEntry("","","");
+				highscore[i] = new ScoreEntry("","","");
 			}
 			
 		}
 
-		
 		return highscore;
+	}
+
+	public CharAmount[] getMostGuessed()
+	{
+		
+		CharAmount mostAskedList[] = new CharAmount[26];
+	
+		for(int i=0;i<26;i++)
+		{
+			mostAskedList[i] = new CharAmount(((char)(i+65))+"",guessedCharactersAmount[i]);
+		}
+		
+		Arrays.sort(mostAskedList, Collections.reverseOrder());
+		
+		return mostAskedList;
+	}
+	
+	public CharAmount[] getMostAsked()
+	{
+		
+		CharAmount mostAskedList[] = new CharAmount[26];
+	
+		for(int i=0;i<26;i++)
+		{
+			mostAskedList[i] = new CharAmount(((char)(i+65))+"",askedCharactersAmount[i]);
+		}
+		
+		Arrays.sort(mostAskedList, Collections.reverseOrder());
+		
+		return mostAskedList;
 	}
 	
 	public void readFile()
@@ -219,7 +248,7 @@ public class wordleScore {
             		
             		parts = line.split("-");
             		
-            		scoreList.add(new scoreEntry(parts[0],parts[1],parts[2]));
+            		scoreList.add(new ScoreEntry(parts[0],parts[1],parts[2]));
             		
             		line = reader.nextLine();
             		if(line.equals(""))

@@ -18,7 +18,7 @@ public class ResizableTextPanel {
 	int horizontalInset;
 	int size;
 	
-	public ResizableTextPanel(String text, Color bgcolor, Color fgcolor, Font font, int prefferedTextSizeToFit, int verticalIns, int HorizontalIns)
+	public ResizableTextPanel(String text, Color bgcolor, Color fgcolor, Font font, int prefferedTextSizeToFit,int HorizontalAllignment, int VerticalAllignment, int verticalIns, int HorizontalIns)
 	{
 		size = prefferedTextSizeToFit;
 		verticalInset = verticalIns;
@@ -32,11 +32,11 @@ public class ResizableTextPanel {
 		labelText = text;
 		label = new JLabel(labelText);
 		
-		panel.setFont(font);
-		panel.setForeground(fgcolor);
+		label.setFont(font);
+		label.setForeground(fgcolor);
 		
-		label.setHorizontalAlignment(JLabel.CENTER);
-		label.setVerticalAlignment(JLabel.CENTER);
+		label.setHorizontalAlignment(HorizontalAllignment);
+		label.setVerticalAlignment(VerticalAllignment);
 				
 		panel.add(label);
 		
@@ -76,7 +76,7 @@ public class ResizableTextPanel {
 
 		int fontSizeToUse = Math.min(newFontSize, componentHeight);
 
-		label.setFont(new Font(labelFont.getName(), Font.BOLD, fontSizeToUse));
+		label.setFont(new Font(labelFont.getName(), labelFont.getStyle(), fontSizeToUse));
 
 	}
 }
