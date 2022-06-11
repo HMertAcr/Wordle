@@ -367,8 +367,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		backButton.addActionListener(this);
 		backButton.setPrefferedTextSize(8);
 		
-		backButton.setBackground(new Color(0,0,0));
+		backButton.setBackground(new Color(20,20,20));
 		backButton.setForeground(new Color(255,255,255));
+		backButton.setPressedBackgroundColor(new Color(220,30,30));
+		backButton.setHoverBackgroundColor(new Color(40,40,40));
+		backButton.setFocusable(false);
 		backButton.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
 		
 		JPanel highscorePanel = new JPanel(new GridLayout(11,3,2,2));
@@ -378,9 +381,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		highScoreGrids = new ResizableTextPanel[33];
 		
-		highScoreGrids[0] = new ResizableTextPanel("Name:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-		highScoreGrids[1] = new ResizableTextPanel("Score:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-		highScoreGrids[2] = new ResizableTextPanel("Word:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		highScoreGrids[0] = new ResizableTextPanel("Name:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		highScoreGrids[1] = new ResizableTextPanel("Score:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+		highScoreGrids[2] = new ResizableTextPanel("Word:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
 		
 		highscorePanel.add(highScoreGrids[0].panel);
 		highscorePanel.add(highScoreGrids[1].panel);
@@ -389,9 +392,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		for(int i=0;i<10;i++)
 		{
 			
-			highScoreGrids[3+(i*3)+0] = new ResizableTextPanel(highscores[i].scoreListNames,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
-			highScoreGrids[3+(i*3)+1] = new ResizableTextPanel(highscores[i].scoreListScores,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
-			highScoreGrids[3+(i*3)+2] = new ResizableTextPanel(highscores[i].scoreListWords,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
+			highScoreGrids[3+(i*3)+0] = new ResizableTextPanel(highscores[i].scoreListNames,new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
+			highScoreGrids[3+(i*3)+1] = new ResizableTextPanel(highscores[i].scoreListScores,new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
+			highScoreGrids[3+(i*3)+2] = new ResizableTextPanel(highscores[i].scoreListWords,new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),5,JLabel.CENTER,JLabel.CENTER,0,0);
 			
 			highscorePanel.add(highScoreGrids[3+(i*3)+0].panel);
 			highscorePanel.add(highScoreGrids[3+(i*3)+1].panel);
@@ -411,8 +414,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		MostAskedCharPanel.setBackground(new Color(255,255,255));
 		MostAskedCharPanel.setBorder(BorderFactory.createMatteBorder(1,2,1,2,new Color(255,255,255)));
 		
-		MostGuessedCharGrids[0] = new ResizableTextPanel("Character:",new Color(0,0,0),new  Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
-		MostGuessedCharGrids[1] = new ResizableTextPanel("Times:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+		MostGuessedCharGrids[0] = new ResizableTextPanel("Character:",new Color(20,20,20),new  Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+		MostGuessedCharGrids[1] = new ResizableTextPanel("Times:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
 
 		MostGuessedCharPanel.add(MostGuessedCharGrids[0].panel);
 		MostGuessedCharPanel.add(MostGuessedCharGrids[1].panel);
@@ -420,16 +423,16 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		for(int i=0;i<5;i++)
 		{
 			
-			MostGuessedCharGrids[2+(i*2)+0] = new ResizableTextPanel(mostGuessedCharacters[i].character,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-			MostGuessedCharGrids[2+(i*2)+1] = new ResizableTextPanel(mostGuessedCharacters[i].amount+"",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			MostGuessedCharGrids[2+(i*2)+0] = new ResizableTextPanel(mostGuessedCharacters[i].character,new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			MostGuessedCharGrids[2+(i*2)+1] = new ResizableTextPanel(mostGuessedCharacters[i].amount+"",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
 			
 			MostGuessedCharPanel.add(MostGuessedCharGrids[2+(i*2)+0].panel);
 			MostGuessedCharPanel.add(MostGuessedCharGrids[2+(i*2)+1].panel);
 			
 		}
 		
-		MostAskedCharGrids[0] = new ResizableTextPanel("Character:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
-		MostAskedCharGrids[1] = new ResizableTextPanel("Times:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+		MostAskedCharGrids[0] = new ResizableTextPanel("Character:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
+		MostAskedCharGrids[1] = new ResizableTextPanel("Times:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),6,JLabel.CENTER,JLabel.CENTER,0,0);
 
 		MostAskedCharPanel.add(MostAskedCharGrids[0].panel);
 		MostAskedCharPanel.add(MostAskedCharGrids[1].panel);
@@ -437,18 +440,18 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		for(int i=0;i<5;i++)
 		{
 			
-			MostAskedCharGrids[2+(i*2)+0] = new ResizableTextPanel(mostAskedCharacters[i].character,new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-			MostAskedCharGrids[2+(i*2)+1] = new ResizableTextPanel(mostAskedCharacters[i].amount+"",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			MostAskedCharGrids[2+(i*2)+0] = new ResizableTextPanel(mostAskedCharacters[i].character,new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
+			MostAskedCharGrids[2+(i*2)+1] = new ResizableTextPanel(mostAskedCharacters[i].amount+"",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
 			
 			MostAskedCharPanel.add(MostAskedCharGrids[2+(i*2)+0].panel);
 			MostAskedCharPanel.add(MostAskedCharGrids[2+(i*2)+1].panel);
 			
 		}
 		
-		highscoreTitle = new ResizableTextPanel("HIGHSCORES:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-		mostGuessedTitle = new ResizableTextPanel("Guessed Words Included:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-		mostAskedTitle = new ResizableTextPanel("Asked Words Included:",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),4,JLabel.CENTER,JLabel.CENTER,0,0);
-		createdBy = new ResizableTextPanel("Created by MAGIC",new Color(0,0,0),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
+		highscoreTitle = new ResizableTextPanel("HIGHSCORES:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),9,JLabel.CENTER,JLabel.CENTER,0,0);
+		mostGuessedTitle = new ResizableTextPanel("Guessed Words Included:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
+		mostAskedTitle = new ResizableTextPanel("Asked Words Included:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
+		createdBy = new ResizableTextPanel("Created by MAGIC",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
 		
 		highscoreTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
 		mostGuessedTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
@@ -907,7 +910,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			}
 			if(dictionary.contains(enteredWord))
 			{
-				score.newGuess(focusedOn-1,enteredWord,secondsPassed);
+				score.newGuess(focusedOn-1,enteredWord,numOfTries[focusedOn-1]+1,secondsPassed);
     			for(int i=0; i<5; i++)
     			{
     				wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].checkCorrectness(i, correctAnswer[focusedOn-1]);
@@ -1432,7 +1435,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 	public void keyPressed(KeyEvent event)
 	{
-		System.out.print(this.getSize());
 		if(gameStarted && !gameFinished[focusedOn-1])
 		{
 			

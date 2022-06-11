@@ -68,9 +68,8 @@ public class WordleScore {
         
 	}
 	
-	public void newGuess(int player, String guessedWord, int secondsPassed)
+	public void newGuess(int player, String guessedWord, int tries, int secondsPassed)
 	{
-		
 		double timeMultiplier = ((double)(300 - secondsPassed))/(double)60;
 		
 		if(timeMultiplier < 0)
@@ -88,7 +87,7 @@ public class WordleScore {
 					if(progressState[player][i]==1)
 					{
 						
-						playerScores[player] += ((double)100)*timeMultiplier;
+						playerScores[player] += (((double)100)*timeMultiplier/(double)tries);
 						
 						progressState[player][i]=2;
 					}
@@ -97,7 +96,7 @@ public class WordleScore {
 						if(progressState[player][i]==0)
 						{
 							
-							playerScores[player] += ((double)200)*timeMultiplier;
+							playerScores[player] += (((double)200)*timeMultiplier/(double)tries);
 							
 							progressState[player][i]=2;
 						}
@@ -107,7 +106,7 @@ public class WordleScore {
 				{
 					if(progressState[player][i]!=2 && progressState[player][i]!=1)
 					{
-						playerScores[player] += ((double)100)*timeMultiplier;
+						playerScores[player] += (((double)100)*timeMultiplier/(double)tries);
 						progressState[player][i]=1;
 						break;
 					}
@@ -122,7 +121,7 @@ public class WordleScore {
     	
 		if(playerCorrectAnswers[player].equals(guessedWord))
 		{
-			playerScores[player] += ((double)1000)*timeMultiplier;
+			playerScores[player] += (((double)1000)*timeMultiplier/(double)tries);
 		}
 		
 		writeToFile();

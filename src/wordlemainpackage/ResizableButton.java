@@ -1,6 +1,8 @@
 package wordlemainpackage;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 
 import javax.swing.*;
 
@@ -11,10 +13,15 @@ public class ResizableButton extends JButton
 	int prefferedSize;
 	int verticalInset;
 	int horizontalInSet;
+	Color pressedBackgroundColor;
+	Color hoverBackgroundColor;
+	
 	
 	public ResizableButton()
 	{
-		
+		super.setContentAreaFilled(false);
+		pressedBackgroundColor = this.getBackground();
+		hoverBackgroundColor = this.getBackground();
 	}
 	
 	
@@ -34,6 +41,39 @@ public class ResizableButton extends JButton
 	{
 		this.horizontalInSet = horizontalInSet;
 	}
+	
+    @Override
+    protected void paintComponent(Graphics g) {
+        if (getModel().isPressed()) {
+            g.setColor(pressedBackgroundColor);
+        } else if (getModel().isRollover()) {
+            g.setColor(hoverBackgroundColor);
+        } else {
+            g.setColor(getBackground());
+        }
+        g.fillRect(0, 0, getWidth(), getHeight());
+        super.paintComponent(g);
+    }
+
+    @Override
+    public void setContentAreaFilled(boolean b) {
+    }
+
+    public Color getHoverBackgroundColor() {
+        return hoverBackgroundColor;
+    }
+
+    public void setHoverBackgroundColor(Color hoverBackgroundColor) {
+        this.hoverBackgroundColor = hoverBackgroundColor;
+    }
+
+    public Color getPressedBackgroundColor() {
+        return pressedBackgroundColor;
+    }
+
+    public void setPressedBackgroundColor(Color pressedBackgroundColor) {
+        this.pressedBackgroundColor = pressedBackgroundColor;
+    }
 	
 	public void resizeText()
 	{
