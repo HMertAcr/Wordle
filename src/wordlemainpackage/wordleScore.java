@@ -9,10 +9,9 @@ public class wordleScore {
 	
 	String scoreFileLocation;
 	File scoreFile;
-
-	ArrayList<String> scoreListNames;
-	ArrayList<String> scoreListScores;
-	ArrayList<String> scoreListWords;
+	
+	ArrayList<scoreEntry> scoreList;
+	
 	int guessedCharactersAmount[];
 	int askedCharactersAmount[];
 	
@@ -37,9 +36,7 @@ public class wordleScore {
 		
 		progressState = new int[playerAmount][5];
 		
-		scoreListNames = new ArrayList<String>(200);
-		scoreListScores = new ArrayList<String>(200);
-		scoreListWords = new ArrayList<String>(200);
+		scoreList = new ArrayList<scoreEntry>(200);
 		
         guessedCharactersAmount = new int[26];
         askedCharactersAmount= new int[26];
@@ -56,6 +53,7 @@ public class wordleScore {
         	        	
         }
         
+        Collections.sort(scoreList,Comparator.reverseOrder());
 		writeToFile();
 		readFile();
         
@@ -136,37 +134,8 @@ public class wordleScore {
 	
 	public void addScoreToList(int player)
 	{
-		
-        scoreListNames.add(playerNames[player]);
-        scoreListWords.add(playerCorrectAnswers[player]);
-        scoreListScores.add(String.format("%04d",((int)playerScores[player])));
-        
-        ArrayList<String> tempSorter = new ArrayList<String>(200);
-        
-        for(int i=0;i<scoreListNames.size();i++)
-        {
-        	tempSorter.add(scoreListNames.get(i)+"-"+scoreListScores.get(i)+"-"+scoreListWords.get(i));
-        }
-        
-        Collections.sort(tempSorter, Comparator.comparing(item -> item.split("-")[1]));
-        Collections.reverse(tempSorter);
-        
-        scoreListNames.clear();
-        scoreListWords.clear();
-        scoreListScores.clear();
-        
-        String parts[];
-        		
-        for(int i=0;i<tempSorter.size();i++)
-        {
-        	parts = tempSorter.get(i).split("-");
-        	scoreListNames.add(parts[0]);
-        	scoreListScores.add(parts[1]);
-        	scoreListWords.add(parts[2]);
-        }
-        
-        //this part sucks change it
-
+		scoreList.add(new scoreEntry(playerNames[player], String.format("%04d",(int)playerScores[player]), playerCorrectAnswers[player]));
+        Collections.sort(scoreList,Comparator.reverseOrder());
 	}
 	
 	public void readFile()
@@ -185,9 +154,7 @@ public class wordleScore {
             int alphabetCounter;
             String[] parts;
             
-    		scoreListNames.clear();
-    		scoreListScores.clear();
-    		scoreListWords.clear();
+            scoreList.clear();
             
             while (reader.hasNextLine())
             {
@@ -214,9 +181,7 @@ public class wordleScore {
             		
             		parts = line.split("-");
             		
-            		scoreListNames.add(parts[0]);
-            		scoreListScores.add(parts[1]);
-            		scoreListWords.add(parts[2]);
+            		scoreList.add(new scoreEntry(parts[0],parts[1],parts[2]));
             		
             		line = reader.nextLine();
             		if(line.equals(""))
@@ -333,9 +298,9 @@ public class wordleScore {
 				+ "\r\n"
 				+ "");
 		
-		for(int i=0;i<scoreListNames.size();i++)
+		for(int i=0;i<scoreList.size();i++)
 		{
-			Writer.write(scoreListNames.get(i) + "-" + scoreListScores.get(i) + "-" + scoreListWords.get(i) + "\r\n");
+			Writer.write(scoreList.get(i).scoreListNames + "-" + scoreList.get(i).scoreListScores + "-" + scoreList.get(i).scoreListWords + "\r\n");
 		}
 		
 		Writer.write("\r\n"
