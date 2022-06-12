@@ -44,7 +44,8 @@ public class ResizableButton extends JButton
 	}
 	
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         if (getModel().isPressed())
         {
             g.setColor(pressedBackgroundColor);

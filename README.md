@@ -5,4 +5,4 @@ Word guessing game
 
 - make resizable radio buttons
 
-- add exit button when game is finished
+- add blur to bacground

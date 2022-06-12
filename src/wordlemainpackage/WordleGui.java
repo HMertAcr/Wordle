@@ -57,9 +57,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	boolean showingStatsMenu;
 	boolean gameFinished[];
 	boolean gameWon[];
+	boolean allFinished;
 	boolean pressedOnQuestionArea[];
 	boolean pressedOnKeyboardBox;
 	boolean draggingKeyboardBox;
+	boolean pressedOnExit;
 	int draggingX;
 	int draggingY;
 	int draggingXOffset;
@@ -69,6 +71,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int messageCordinates[][];
 	Font scoreFont;
 	int scoreCordinates[][];
+	Font exitFont;
+	int exitCordinates[];
 	ScoreEntry highscores[];
 	CharAmount mostGuessedCharacters[];
 	CharAmount mostAskedCharacters[];
@@ -83,10 +87,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		gameStarted = false;
 		showingStatsMenu = false;
-		pressedOnKeyboardBox= false;
-		draggingKeyboardBox = false;
-		draggingX = 0;
-		draggingY = 0;
+
 		
 		this.setVisible(true);
 		
@@ -929,6 +930,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 	}
 	
+	private void backToMenu()
+	{
+		gameStarted=false;
+		this.remove(wordleGameArea);
+		startMenu();
+		repaint();
+	}
+	
 	public void changeFocus(int newFocus)
 	{
 		wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
@@ -1003,6 +1012,22 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
             			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			
+    					allFinished = true;
+    					
+    					for(int j=0;j<gameFinished.length;j++)
+    					{
+    						if(!gameFinished[j])
+    						{
+    							allFinished = false;
+    						}
+    					}
+    					
+    					if(allFinished)
+    					{
+    						calculateExitButtonCordinates();
+    					}
+    					
             			this.repaint();
             			
             			if(playerAmount==2)
@@ -1048,6 +1073,22 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
             			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			
+            			allFinished = true;
+            			
+    					for(int j=0;j<gameFinished.length;j++)
+    					{
+    						if(!gameFinished[j])
+    						{
+    							allFinished = false;
+    						}
+    					}
+    					
+    					if(allFinished)
+    					{
+    						calculateExitButtonCordinates();
+    					}
+            			
             			this.repaint();
             			
         			}
@@ -1058,6 +1099,22 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			gameWon[focusedOn-1]=false;
             			score.playerFinishedGame(focusedOn-1);
             			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			
+            			allFinished = true;
+            			
+    					for(int j=0;j<gameFinished.length;j++)
+    					{
+    						if(!gameFinished[j])
+    						{
+    							allFinished = false;
+    						}
+    					}
+    					
+    					if(allFinished)
+    					{
+    						calculateExitButtonCordinates();
+    					}
+            			
             			this.repaint();
         			}
         			
@@ -1188,7 +1245,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		messageFont = new Font("SansSerif", Font.BOLD, messageFontSizeToUse);
 		messageWidth = getFontMetrics(messageFont).stringWidth(message);
 		
-		
 		double scoreWidthRatio = (double)componentWidth / (double)scoreWidth;
 		int scoreNewFontSize = (int)(scoreFont.getSize() * scoreWidthRatio);
 		int scoreFontSizeToUse = Math.min(scoreNewFontSize, componentHeight);
@@ -1208,7 +1264,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 	}
 	
-	
 	public void displayStatus(int player, String message, int scoreValue, boolean antialiass,Graphics g)
 	{
 		
@@ -1227,13 +1282,58 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		}
 
-		g2.setColor(new Color(225,50,50));
+		g2.setColor(new Color(220,30,30));
 		
 		g2.setFont(messageFont);
 		g2.drawString(message, messageCordinates[player][0], messageCordinates[player][1]);
 		
 		g2.setFont(scoreFont);
 		g2.drawString(score, scoreCordinates[player][0], scoreCordinates[player][1]);
+		
+	}
+	
+	public void calculateExitButtonCordinates()
+	{
+		
+		int WordleAreaX = wordleQuestionArea[0].getX()+7;
+		int WordleAreaY = wordleQuestionArea[0].getY()+32;
+		int WordleAreaHeight = wordleQuestionArea[0].getHeight();
+		int frameWidth = this.getWidth();
+
+		int exitButtonWidth = frameWidth/2;
+		int exitButtonHeight = WordleAreaHeight/5;
+		
+		int exitButtonX = WordleAreaX+frameWidth/2-exitButtonWidth/2;
+		int exitButtonY = WordleAreaY+3*((WordleAreaHeight-exitButtonHeight)/3);
+		
+		exitFont = new Font("SansSerif", Font.BOLD, 25);
+		int exitTextWidth = getFontMetrics(exitFont).stringWidth("EXIT");
+		
+		double exitWidthRatio = (double)exitButtonWidth / (double)exitTextWidth;
+		int exitNewFontSize = (int)(exitFont.getSize() * exitWidthRatio);
+		int exitFontSizeToUse = Math.min(exitNewFontSize, exitButtonHeight);
+		
+		exitFont = new Font("SansSerif", Font.BOLD, exitFontSizeToUse);
+		exitTextWidth = getFontMetrics(exitFont).stringWidth("EXIT");
+		
+		int exitTextHeight = getFontMetrics(exitFont).getHeight();
+		int exitTextAscent = getFontMetrics(exitFont).getAscent();
+		
+		exitCordinates = new int[] {exitButtonX, exitButtonY, exitButtonWidth, exitButtonHeight, exitButtonX + (exitButtonWidth - exitTextWidth)/2, exitButtonY + (exitButtonHeight - exitTextHeight)/2 + exitTextAscent};
+		
+	}
+	
+	public void drawExitButton(Graphics g)
+	{
+		
+		Graphics2D g2 = (Graphics2D)g;
+		
+		g2.setColor(new Color(220,30,30));
+		g2.fillRect(exitCordinates[0], exitCordinates[1], exitCordinates[2], exitCordinates[3]);
+		
+		g2.setFont(exitFont);
+		g2.setColor(new Color(255,255,255));
+		g2.drawString("EXIT", exitCordinates[4], exitCordinates[5]);
 		
 	}
 	
@@ -1250,6 +1350,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				drawDraggedKeyboard(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
 			}
 			
+			
 			for(int i=0;i<playerAmount;i++)
 			{
 				if(gameFinished[i])
@@ -1263,6 +1364,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						displayStatus(i,"You Lost!",finalScore[i],false,g);
 					}
 				}
+			}
+			
+			if(allFinished)
+			{
+				drawExitButton(g);
 			}
 		}
 	}
@@ -1288,10 +1394,19 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					this.setMinimumSize(new Dimension(350,350));
 					
 					gameStarted = true;
+					allFinished = false;
 					
 					secondsPassed = 0;
 					focusedOn = 1;
-										
+					
+					pressedOnExit= false;
+					pressedOnKeyboardBox= false;
+					draggingKeyboardBox = false;
+					draggingX = 0;
+					draggingY = 0;
+					
+					exitCordinates = new int[]{0,0,0,0,0,0};
+					
 					if(playerAmount==1)
 					{
 						
@@ -1589,27 +1704,18 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				int keyboardWidth = keyboard.getWidth();
 				int keyboardHeight = keyboard.getHeight();
 				
-				if(clickedX>keyboardX&&clickedX<(keyboardX+keyboardWidth)&&clickedY>keyboardY&&clickedY<(keyboardY+keyboardHeight))
+				if(!allFinished)
 				{
-					for(int i=0; i<28; i++)
+				
+					if(clickedX>keyboardX&&clickedX<(keyboardX+keyboardWidth)&&clickedY>keyboardY&&clickedY<(keyboardY+keyboardHeight))
 					{
-						int currentKeyX = keyboardKeys[i].KeyboardBoxPanel.getX();
-						int currentKeyY = keyboardKeys[i].KeyboardBoxPanel.getY();
-						int currentKeyWidth = keyboardKeys[i].KeyboardBoxPanel.getWidth();
-						int currentKeyHeight = keyboardKeys[i].KeyboardBoxPanel.getHeight();
-						
-						boolean bothFinished = true;
-						
-						for(int j=0;j<gameFinished.length;j++)
+						for(int i=0; i<28; i++)
 						{
-							if(!gameFinished[j])
-							{
-								bothFinished = false;
-							}
-						}
+							int currentKeyX = keyboardKeys[i].KeyboardBoxPanel.getX();
+							int currentKeyY = keyboardKeys[i].KeyboardBoxPanel.getY();
+							int currentKeyWidth = keyboardKeys[i].KeyboardBoxPanel.getWidth();
+							int currentKeyHeight = keyboardKeys[i].KeyboardBoxPanel.getHeight();
 						
-						if(!bothFinished)
-						{
 							if(clickedX>(keyboardX+currentKeyX)&&clickedX<(keyboardX+currentKeyX+currentKeyWidth)&&clickedY>(keyboardY+currentKeyY)&&clickedY<(keyboardY+currentKeyY+currentKeyHeight))
 							{
 								pressedOnKeyboardBox = true;
@@ -1620,6 +1726,14 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 							}
 						}
 					}
+				}
+			}
+			if (allFinished)
+			{
+				if(clickedX>exitCordinates[0]&&clickedX<exitCordinates[0]+exitCordinates[2]&&clickedY>exitCordinates[1]&&clickedY<exitCordinates[1]+exitCordinates[3])
+				{
+					pressedOnExit = true;
+					//TODO pressed
 				}
 			}
 		}		
@@ -1753,12 +1867,25 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					pressedOnQuestionArea[i]=false;
 				}
 			}
-		}	
+			
+			if(allFinished)
+			{
+				if(pressedOnExit)
+				{
+					if(clickedX>exitCordinates[0]&&clickedX<exitCordinates[0]+exitCordinates[2]&&clickedY>exitCordinates[1]&&clickedY<exitCordinates[1]+exitCordinates[3])
+					{
+						backToMenu();
+						//TODO released
+					}
+				}
+			}
+			
+		}
 		
 		draggingKeyboardBox = false;
 		pressedOnKeyboardBox = false;
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
@@ -1819,6 +1946,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					keyboardKeys[key].resizeText();
 				}
 			}
+			
+			if(allFinished)
+			{
+				calculateExitButtonCordinates();
+			}
+			
 			for(int i=0; i<playerAmount; i++)
 			{
 				if(gameFinished[i])
