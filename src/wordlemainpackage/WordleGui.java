@@ -565,7 +565,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		highscoreTitle = new ResizableTextPanel("HIGHSCORES:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),9,JLabel.CENTER,JLabel.CENTER,0,0);
 		mostGuessedTitle = new ResizableTextPanel("Guessed Words Included:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
 		mostAskedTitle = new ResizableTextPanel("Asked Words Included:",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.PLAIN, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
-		createdBy = new ResizableTextPanel("Created by MAGIC",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
+		createdBy = new ResizableTextPanel("Created by HM & HB",new Color(20,20,20),new Color(255,255,255),new Font("SansSerif", Font.BOLD, 25),12,JLabel.CENTER,JLabel.CENTER,0,0);
 		
 		highscoreTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
 		mostGuessedTitle.panel.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(255,255,255)));
@@ -736,7 +736,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			for(int i=0; i<playerAmount; i++)
 			{
 				
-				System.out.println(correctAnswer[i]);
+				//System.out.println(correctAnswer[i]);
 				
 				wordleQuestionArea[i] = new JPanel();
 				
@@ -1008,7 +1008,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
             			
             			gameFinished[focusedOn-1]=true;
-            			calculateFontSize(focusedOn-1,"You Won!",0);
+            			calculateFinishFontSize(focusedOn-1,"You Won!",0);
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
             			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
@@ -1069,7 +1069,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         			{
         				
             			gameFinished[focusedOn-1]=true;
-            			calculateFontSize(focusedOn-1,"You Won!",0);
+            			calculateFinishFontSize(focusedOn-1,"You Won!",0);
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
             			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
@@ -1095,7 +1095,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         			else
         			{
             			gameFinished[focusedOn-1]=true;
-            			calculateFontSize(focusedOn-1,"You Lost!",0);
+            			calculateFinishFontSize(focusedOn-1,"You Lost!",0);
             			gameWon[focusedOn-1]=false;
             			score.playerFinishedGame(focusedOn-1);
             			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
@@ -1212,7 +1212,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	}
 	
 	
-	public void calculateFontSize(int player, String message, int scoreValue)
+	public void calculateFinishFontSize(int player, String message, int scoreValue)
 	{		
 		
 		String score = String.format("Score: %04d", scoreValue);
@@ -1733,7 +1733,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				if(clickedX>exitCordinates[0]&&clickedX<exitCordinates[0]+exitCordinates[2]&&clickedY>exitCordinates[1]&&clickedY<exitCordinates[1]+exitCordinates[3])
 				{
 					pressedOnExit = true;
-					//TODO pressed
 				}
 			}
 		}		
@@ -1875,7 +1874,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					if(clickedX>exitCordinates[0]&&clickedX<exitCordinates[0]+exitCordinates[2]&&clickedY>exitCordinates[1]&&clickedY<exitCordinates[1]+exitCordinates[3])
 					{
 						backToMenu();
-						//TODO released
 					}
 				}
 			}
@@ -1957,11 +1955,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				if(gameFinished[i])
 				{
 					if(gameWon[i]) {
-						calculateFontSize(i,"You Won!",0);
+						calculateFinishFontSize(i,"You Won!",0);
 					}
 					else
 					{
-						calculateFontSize(i,"You Lost!",0);
+						calculateFinishFontSize(i,"You Lost!",0);
 					}
 				}
 			}
