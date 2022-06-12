@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-@SuppressWarnings("serial")
 public class WordleGui extends JFrame implements ActionListener, KeyListener, MouseListener, MouseMotionListener, ComponentListener
 {
 	

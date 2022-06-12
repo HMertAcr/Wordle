@@ -6,7 +6,6 @@ import java.awt.Graphics;
 
 import javax.swing.*;
 
-@SuppressWarnings("serial")
 public class ResizableButton extends JButton
 {
 
