@@ -924,7 +924,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		wordleGameArea.add(bottomLayer, gcon);
 		
 		timer = new Timer(1000, this);
-		timer.start(); 
+		timer.start();
 
 		
 	}
@@ -1007,10 +1007,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].unHighlight();
             			
             			gameFinished[focusedOn-1]=true;
-            			calculateFinishFontSize(focusedOn-1,"You Won!",0);
+						finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			calculateFinishFontSize(focusedOn-1,"You Won!",finalScore[focusedOn-1]);
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
-            			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
             			
     					allFinished = true;
     					
@@ -1068,10 +1068,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         			{
         				
             			gameFinished[focusedOn-1]=true;
-            			calculateFinishFontSize(focusedOn-1,"You Won!",0);
+						finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			calculateFinishFontSize(focusedOn-1,"You Won!",finalScore[focusedOn-1]);
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
-            			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
             			
             			allFinished = true;
             			
@@ -1094,10 +1094,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         			else
         			{
             			gameFinished[focusedOn-1]=true;
-            			calculateFinishFontSize(focusedOn-1,"You Lost!",0);
+						finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			calculateFinishFontSize(focusedOn-1,"You Lost!",finalScore[focusedOn-1]);
             			gameWon[focusedOn-1]=false;
             			score.playerFinishedGame(focusedOn-1);
-            			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			
             			
             			allFinished = true;
             			
@@ -1954,11 +1955,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				if(gameFinished[i])
 				{
 					if(gameWon[i]) {
-						calculateFinishFontSize(i,"You Won!",0);
+						calculateFinishFontSize(i,"You Won!",finalScore[i]);
 					}
 					else
 					{
-						calculateFinishFontSize(i,"You Lost!",0);
+						calculateFinishFontSize(i,"You Lost!",finalScore[i]);
 					}
 				}
 			}

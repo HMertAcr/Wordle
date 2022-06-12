@@ -3,7 +3,8 @@ package wordlemainpackage;
 import java.io.*;
 import java.util.*;
 
-public class WordleScore {
+public class WordleScore
+{
 	public
 	
 	String scoreFileLocation;

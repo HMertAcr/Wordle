@@ -21,7 +21,8 @@ public class ScoreEntry implements Comparable<ScoreEntry>
 	}
 
 	@Override
-	public int compareTo(ScoreEntry se) {
+	public int compareTo(ScoreEntry se)
+	{
 		if(Integer.parseInt(this.scoreListScores)>Integer.parseInt(se.scoreListScores)) 
 		{
 			return 1;
