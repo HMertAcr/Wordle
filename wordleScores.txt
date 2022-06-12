@@ -3,7 +3,6 @@ Scores:
 cheater-9966-CHEAT
 lucky-9933-LUCKY
 HMa-6530-TREES
-hello-4311-BOOLS
 hmert-4283-PAALS
 beyza-1855-TOSHY
 Hakan-0897-JOLLS
@@ -44,29 +43,29 @@ Z-1
 
 Word Asked:
 
-A-100
+A-104
 B-20
-C-36
+C-37
 D-46
-E-129
-F-21
-G-16
-H-34
-I-49
+E-130
+F-22
+G-17
+H-35
+I-53
 J-5
-K-17
+K-18
 L-55
-M-34
-N-40
-O-66
+M-35
+N-41
+O-69
 P-39
-Q-1
-R-55
-S-101
+Q-2
+R-57
+S-105
 T-47
-U-42
-V-12
+U-43
+V-14
 W-22
 X-5
 Y-22
-Z-1
+Z-2

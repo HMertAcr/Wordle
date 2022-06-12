@@ -1638,6 +1638,13 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	    		
 	    		return;
 	    	}
+
+			if(event.getKeyCode() == KeyEvent.VK_ESCAPE)
+	    	{
+	    		backToMenu();
+	    		
+	    		return;
+	    	}
 	    	
 	    	if ((event.getKeyChar() > 64 && event.getKeyChar() < 91) || (event.getKeyChar() > 96 && event.getKeyChar() < 123))
 	    	{
