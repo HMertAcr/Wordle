@@ -31,8 +31,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	JRadioButton twoPlayerButton;
 	JRadioButton addKeyboardYESButton;
 	JRadioButton addKeyboardNOButton;
-	JButton startGameButton;
-	JButton openStatsButton;
+	ResizableButton startGameButton;
+	ResizableButton openStatsButton;
 	ResizableButton backButton;
 	ResizableTextPanel[] highScoreGrids;
 	ResizableTextPanel[] MostGuessedCharGrids;
@@ -41,6 +41,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	ResizableTextPanel mostGuessedTitle;
 	ResizableTextPanel mostAskedTitle;
 	ResizableTextPanel createdBy;
+	ResizableTextPanel enterPlayerNamesLabel;
+	ResizableTextPanel enterIfKeyboardLabel;
 	Timer timer;
 	int secondsPassed;
 	int positionInWord[];
@@ -51,6 +53,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int finalScore[];
 	boolean addKeyboard;
 	boolean gameStarted;
+	boolean showingMenu;
 	boolean showingStatsMenu;
 	boolean gameFinished[];
 	boolean gameWon[];
@@ -115,6 +118,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public void startMenu()
 	{
 		
+		this.setMinimumSize(new Dimension(450,325));
+		this.setSize(new Dimension(500,350));
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+		
 		addKeyboard = false;
 		playerAmount = 1;
 		
@@ -128,14 +137,28 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		this.add(gameMenu);
 		
-		startGameButton = new JButton();
-		openStatsButton = new JButton();
+		startGameButton = new ResizableButton();
+		openStatsButton = new ResizableButton();
 		
 		startGameButton.setText("Start");
 		openStatsButton.setText("Stats");
 		
+		startGameButton.setFont(new Font("SansSerif", Font.BOLD, 30));
+		openStatsButton.setFont(new Font("SansSerif", Font.BOLD, 30));
+		
 		startGameButton.setBackground(new Color(60,60,60));
 		openStatsButton.setBackground(new Color(60,60,60));
+		
+		startGameButton.setHoverBackgroundColor(new Color(80,80,80));
+		openStatsButton.setHoverBackgroundColor(new Color(80,80,80));
+		
+		startGameButton.setPressedBackgroundColor(new Color(85,140,80));
+		openStatsButton.setPressedBackgroundColor(new Color(180,160,60));
+		
+		openStatsButton.setPrefferedTextSize(5);
+
+		startGameButton.setFocusable(false);
+		openStatsButton.setFocusable(false);
 		
 		startGameButton.setForeground(Color.white);
 		openStatsButton.setForeground(Color.white);
@@ -167,12 +190,75 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		playerTwoNameField.setForeground(Color.black);
 		playerOneNameField.setForeground(Color.black);
 		
+		playerTwoNameField.setEnabled(false);
+		
+		JPanel playerOneFieldPanel = new JPanel(new GridBagLayout());
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=0;
+		gcon.gridwidth=9;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.HORIZONTAL;
+		gcon.insets = new Insets(0,0,0,0);
+		playerOneFieldPanel.add(playerOneNameField,gcon);
+		
+		for(int i=0;i<10;i++)
+		{
+			gcon.weightx=1;
+			gcon.weighty=1;
+			gcon.gridx=i;
+			gcon.gridy=0;
+			gcon.gridwidth=1;
+			gcon.gridheight=1;
+			gcon.anchor=GridBagConstraints.CENTER;
+			gcon.fill=GridBagConstraints.HORIZONTAL;
+			gcon.insets = new Insets(0,0,0,0);
+			playerOneFieldPanel.add(new JLabel(),gcon);
+		}
+		
+		JPanel playerTwoFieldPanel = new JPanel(new GridBagLayout());
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=0;
+		gcon.gridwidth=9;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.HORIZONTAL;
+		gcon.insets = new Insets(0,0,0,0);
+		playerTwoFieldPanel.add(playerTwoNameField,gcon);
+		
+		for(int i=0;i<10;i++)
+		{
+			gcon.weightx=1;
+			gcon.weighty=1;
+			gcon.gridx=i;
+			gcon.gridy=0;
+			gcon.gridwidth=1;
+			gcon.gridheight=1;
+			gcon.anchor=GridBagConstraints.CENTER;
+			gcon.fill=GridBagConstraints.HORIZONTAL;
+			gcon.insets = new Insets(0,0,0,0);
+			playerTwoFieldPanel.add(new JLabel(),gcon);
+		}
+
+		
+		playerOneFieldPanel.setBackground(new Color(230,230,230));
+		playerTwoFieldPanel.setBackground(new Color(230,230,230));
+		
 		addKeyboardYESButton = new JRadioButton();
 		addKeyboardNOButton = new JRadioButton();
 		
 		ButtonGroup shouldAddKeyboardButton = new ButtonGroup();
 		shouldAddKeyboardButton.add(addKeyboardYESButton);
 		shouldAddKeyboardButton.add(addKeyboardNOButton);
+		
+		JPanel KeyBoardOptionsPanel = new JPanel(new GridLayout(1,2));
+		
+		KeyBoardOptionsPanel.add(addKeyboardYESButton);
+		KeyBoardOptionsPanel.add(addKeyboardNOButton);
 		
 		addKeyboardNOButton.setSelected(true);
 		
@@ -185,14 +271,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		addKeyboardYESButton.setForeground(Color.black);
 		addKeyboardNOButton.setForeground(Color.black);
 		
-		JLabel enterPlayerNamesLabel = new JLabel("Enter Players");
-		JLabel enterIfKeyboardLabel = new JLabel("Do you want to add keyboard?");
-		
-		enterPlayerNamesLabel.setBackground(new Color(230,230,230));
-		enterIfKeyboardLabel.setBackground(new Color(230,230,230));
-		
-		enterPlayerNamesLabel.setForeground(Color.black);
-		enterIfKeyboardLabel.setForeground(Color.black);
+		enterPlayerNamesLabel = new ResizableTextPanel("Enter Players:",new Color(230,230,230),new Color(0,0,0),new Font("SansSerif", Font.BOLD, 25),20,JLabel.CENTER,JLabel.CENTER,2,0);
+		enterIfKeyboardLabel = new ResizableTextPanel("Do you want to add keyboard?",new Color(230,230,230),new Color(0,0,0),new Font("SansSerif", Font.BOLD, 25),20,JLabel.CENTER,JLabel.CENTER,2,0);
 		
 		onePlayerButton.addActionListener(this);
 		twoPlayerButton.addActionListener(this);
@@ -201,148 +281,175 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		addKeyboardYESButton.addActionListener(this);
 		addKeyboardNOButton.addActionListener(this);
 		
-		
-		gcon.weightx=1;
-		gcon.weighty=3;
-		gcon.gridx=0;
-		gcon.gridy=0;
-		gcon.gridwidth=9;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		gameMenu.add(enterPlayerNamesLabel, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=2;
-		gcon.gridx=0;
-		gcon.gridy=1;
-		gcon.gridwidth=3;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		gameMenu.add(onePlayerButton, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=2;
-		gcon.gridx=0;
-		gcon.gridy=2;
-		gcon.gridwidth=3;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,0);
-
-		gameMenu.add(twoPlayerButton, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=2;
-		gcon.gridx=3;
-		gcon.gridy=1;
-		gcon.gridwidth=5;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.LINE_START;
-		gcon.fill=GridBagConstraints.HORIZONTAL;
-		gcon.insets = new Insets(0,0,0,0);
-
-		gameMenu.add(playerOneNameField, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=2;
-		gcon.gridx=3;
-		gcon.gridy=2;
-		gcon.gridwidth=5;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.LINE_START;
-		gcon.fill=GridBagConstraints.HORIZONTAL;
-		gcon.insets = new Insets(0,0,0,0);
-
-		gameMenu.add(playerTwoNameField, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=3;
-		gcon.gridx=0;
-		gcon.gridy=3;
-		gcon.gridwidth=9;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,10,0,0);
-		
-		gameMenu.add(enterIfKeyboardLabel, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=2;
-		gcon.gridx=1;
-		gcon.gridy=4;
-		gcon.gridwidth=3;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,0);
-
-		gameMenu.add(addKeyboardNOButton, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=2;
-		gcon.gridx=5;
-		gcon.gridy=4;
-		gcon.gridwidth=3;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.NONE;
-		gcon.insets = new Insets(0,0,0,0);
-
-		gameMenu.add(addKeyboardYESButton, gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=4;
-		gcon.gridx=0;
-		gcon.gridy=5;
-		gcon.gridwidth=3;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,15,0,10);
-
-		gameMenu.add(openStatsButton, gcon);
-
-		gcon.weightx=1;
-		gcon.weighty=4;
-		gcon.gridx=3;
-		gcon.gridy=5;
-		gcon.gridwidth=6;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,5,0,15);
-
-		gameMenu.add(startGameButton, gcon);
-		
-		for(int i=0;i<9;i++)
+		for(int i=0;i<7;i++)
 		{
 			gcon.weightx=1;
-			gcon.weighty=0;
+			gcon.weighty=1;
 			gcon.gridx=i;
-			gcon.gridy=6;
+			gcon.gridy=0;
 			gcon.gridwidth=1;
 			gcon.gridheight=1;
 			gcon.anchor=GridBagConstraints.CENTER;
 			gcon.fill=GridBagConstraints.BOTH;
 			gcon.insets = new Insets(0,0,0,0);
 			
-			JLabel dummyJlabel = new JLabel();
-			
-			dummyJlabel.setMinimumSize(new Dimension(100, 10));
-			dummyJlabel.setPreferredSize(new Dimension(100, 10));
-			gameMenu.add(dummyJlabel, gcon);
+			gameMenu.add(new JLabel(), gcon);
 		}
 		
-		playerTwoNameField.setEnabled(false);
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=0;
+		gcon.gridwidth=7;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		enterPlayerNamesLabel.panel.setMinimumSize(new Dimension(70,10));
+		enterPlayerNamesLabel.panel.setPreferredSize(new Dimension(70,10));
+		gameMenu.add(enterPlayerNamesLabel.panel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=1;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		onePlayerButton.setVerticalAlignment(JRadioButton.CENTER);
+		onePlayerButton.setHorizontalAlignment(JRadioButton.CENTER);
+		
+		onePlayerButton.setMinimumSize(new Dimension(20,10));
+		onePlayerButton.setPreferredSize(new Dimension(20,10));
+		gameMenu.add(onePlayerButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=1;
+		gcon.gridwidth=5;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		playerOneFieldPanel.setMinimumSize(new Dimension(50,10));
+		playerOneFieldPanel.setPreferredSize(new Dimension(50,10));
+		gameMenu.add(playerOneFieldPanel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=2;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		twoPlayerButton.setVerticalAlignment(JRadioButton.CENTER);
+		twoPlayerButton.setHorizontalAlignment(JRadioButton.CENTER);
+		
+		twoPlayerButton.setMinimumSize(new Dimension(20,10));
+		twoPlayerButton.setPreferredSize(new Dimension(20,10));
+		gameMenu.add(twoPlayerButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=2;
+		gcon.gridy=2;
+		gcon.gridwidth=5;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		playerTwoFieldPanel.setMinimumSize(new Dimension(50,10));
+		playerTwoFieldPanel.setPreferredSize(new Dimension(50,10));
+		gameMenu.add(playerTwoFieldPanel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=0;
+		gcon.gridy=3;
+		gcon.gridwidth=7;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		enterIfKeyboardLabel.panel.setMinimumSize(new Dimension(70,10));
+		enterIfKeyboardLabel.panel.setPreferredSize(new Dimension(70,10));
+		gameMenu.add(enterIfKeyboardLabel.panel, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=1;
+		gcon.gridy=4;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		addKeyboardNOButton.setVerticalAlignment(JRadioButton.CENTER);
+		addKeyboardNOButton.setHorizontalAlignment(JRadioButton.CENTER);
 
+		addKeyboardNOButton.setMinimumSize(new Dimension(20,10));
+		addKeyboardNOButton.setPreferredSize(new Dimension(20,10));
+		gameMenu.add(addKeyboardNOButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1;
+		gcon.gridx=4;
+		gcon.gridy=4;
+		gcon.gridwidth=2;
+		gcon.gridheight=1;
+		gcon.anchor=GridBagConstraints.WEST;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(0,0,0,0);
+		
+		addKeyboardYESButton.setVerticalAlignment(JRadioButton.CENTER);
+		addKeyboardYESButton.setHorizontalAlignment(JRadioButton.CENTER);
+		
+		addKeyboardYESButton.setMinimumSize(new Dimension(20,10));
+		addKeyboardYESButton.setPreferredSize(new Dimension(20,10));
+		gameMenu.add(addKeyboardYESButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1.5;
+		gcon.gridx=0;
+		gcon.gridy=5;
+		gcon.gridwidth=2;
+		gcon.gridheight=3;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,0);
+		
+		openStatsButton.setMinimumSize(new Dimension(30,10));
+		openStatsButton.setPreferredSize(new Dimension(30,10));
+		gameMenu.add(openStatsButton, gcon);
+		
+		gcon.weightx=1;
+		gcon.weighty=1.5;
+		gcon.gridx=2;
+		gcon.gridy=5;
+		gcon.gridwidth=5;
+		gcon.gridheight=3;
+		gcon.anchor=GridBagConstraints.CENTER;
+		gcon.fill=GridBagConstraints.BOTH;
+		gcon.insets = new Insets(10,10,10,10);
+		
+		startGameButton.setMinimumSize(new Dimension(40,10));
+		startGameButton.setPreferredSize(new Dimension(40,10));
+		gameMenu.add(startGameButton, gcon);
+		
+		showingMenu = true;
+		
 		gameMenu.revalidate();
 		gameMenu.repaint();
 		
@@ -350,6 +457,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	
 	private void startStats()
 	{
+		
+		this.setMinimumSize(new Dimension(1000,625));
+		this.setSize(new Dimension(1000,625));
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 		
 		statsMenu = new JPanel();
 		
@@ -503,65 +616,20 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		statsMenu.add(MostGuessedCharPanel, gcon);
 		
-		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=0;
-		gcon.gridy=3;
-		gcon.gridwidth=1;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		statsMenu.add(new JLabel(), gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=0;
-		gcon.gridy=4;
-		gcon.gridwidth=1;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		statsMenu.add(new JLabel(), gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=0;
-		gcon.gridy=5;
-		gcon.gridwidth=1;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		statsMenu.add(new JLabel(), gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=0;
-		gcon.gridy=6;
-		gcon.gridwidth=1;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		statsMenu.add(new JLabel(), gcon);
-		
-		gcon.weightx=1;
-		gcon.weighty=1;
-		gcon.gridx=0;
-		gcon.gridy=7;
-		gcon.gridwidth=1;
-		gcon.gridheight=1;
-		gcon.anchor=GridBagConstraints.CENTER;
-		gcon.fill=GridBagConstraints.BOTH;
-		gcon.insets = new Insets(0,0,0,0);
-		
-		statsMenu.add(new JLabel(), gcon);
+		for(int i=0;i<8;i++)
+		{
+			gcon.weightx=1;
+			gcon.weighty=1;
+			gcon.gridx=0;
+			gcon.gridy=i;
+			gcon.gridwidth=1;
+			gcon.gridheight=1;
+			gcon.anchor=GridBagConstraints.CENTER;
+			gcon.fill=GridBagConstraints.BOTH;
+			gcon.insets = new Insets(0,0,0,0);
+			
+			statsMenu.add(new JLabel(), gcon);
+		}
 		
 		gcon.weightx=1;
 		gcon.weighty=1;
@@ -972,12 +1040,26 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
         		else
         		{
         			
-        			gameFinished[focusedOn-1]=true;
-        			calculateFontSize(focusedOn-1,"You Lost!",0);
-        			gameWon[focusedOn-1]=false;
-        			score.playerFinishedGame(focusedOn-1);
-        			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
-        			this.repaint();
+        			if(enteredWord.equals(correctAnswer[focusedOn-1]))
+        			{
+        				
+            			gameFinished[focusedOn-1]=true;
+            			calculateFontSize(focusedOn-1,"You Won!",0);
+            			gameWon[focusedOn-1]=true;
+            			score.playerFinishedGame(focusedOn-1);
+            			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			this.repaint();
+            			
+        			}
+        			else
+        			{
+            			gameFinished[focusedOn-1]=true;
+            			calculateFontSize(focusedOn-1,"You Lost!",0);
+            			gameWon[focusedOn-1]=false;
+            			score.playerFinishedGame(focusedOn-1);
+            			finalScore[focusedOn-1]=score.getPlayerScore(focusedOn-1);
+            			this.repaint();
+        			}
         			
         			if(playerAmount==2)
         			{
@@ -1136,7 +1218,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		if(antialiass)
 		{
-		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
 		    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 		else
@@ -1166,40 +1248,22 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			if(draggingKeyboardBox)
 			{
 				drawDraggedKeyboard(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
-				for(int i=0;i<playerAmount;i++)
-				{
-					if(gameFinished[i])
-					{
-						if(gameWon[i])
-						{
-							displayStatus(i,"You Won!",finalScore[i],false,g);
-						}
-						else
-						{
-							displayStatus(i,"You Lost!",finalScore[i],false,g);
-						}
-					}
-				}
-			}
-			else
-			{
-				for(int i=0;i<playerAmount;i++)
-				{
-					if(gameFinished[i])
-					{
-						if(gameWon[i])
-						{
-							displayStatus(i,"You Won!",finalScore[i],true,g);
-						}
-						else
-						{
-							displayStatus(i,"You Lost!",finalScore[i],true,g);
-						}
-					}
-				}
 			}
 			
-
+			for(int i=0;i<playerAmount;i++)
+			{
+				if(gameFinished[i])
+				{
+					if(gameWon[i])
+					{
+						displayStatus(i,"You Won!",finalScore[i],false,g);
+					}
+					else
+					{
+						displayStatus(i,"You Lost!",finalScore[i],false,g);
+					}
+				}
+			}
 		}
 	}
 	
@@ -1216,6 +1280,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			{
 				if(!gameStarted)
 				{
+					
+					showingMenu = false;
+					showingStatsMenu = false;
 					
 					this.setSize(new Dimension(550,550));
 					this.setMinimumSize(new Dimension(350,350));
@@ -1322,30 +1389,21 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		if(event.getSource() == openStatsButton)
 		{
 			showingStatsMenu = true;
-			this.setMinimumSize(new Dimension(1000,625));
-			this.setSize(new Dimension(1000,625));
-			
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
 			
 			highscores = score.getHighscore();
-			mostAskedCharacters = score.getMostGuessed();
-			mostGuessedCharacters = score.getMostAsked();
+			mostAskedCharacters = score.getMostAsked();
+			mostGuessedCharacters = score.getMostGuessed();
 			startStats();
 		}
 		
 		if(event.getSource() == backButton)
 		{
-
-			showingStatsMenu = false;
-			this.setMinimumSize(new Dimension(450,325));
-			this.setSize(new Dimension(500,350));
 			
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+			showingStatsMenu = false;
 			
 			this.remove(statsMenu);
 			startMenu();
+			
 		}
 		
 		if(event.getSource() == onePlayerButton)
@@ -1663,6 +1721,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						}
 					}
 				}
+				repaint();
 			}
 			else
 			{
@@ -1698,7 +1757,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		draggingKeyboardBox = false;
 		pressedOnKeyboardBox = false;
-		repaint();
 	}
 	
 	@Override
@@ -1777,6 +1835,17 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		}
 		else
 		{
+			
+			if(showingMenu)
+			{
+				openStatsButton.resizeText();
+				startGameButton.setFont(openStatsButton.getFont());
+				
+				enterPlayerNamesLabel.resizeText();
+				enterIfKeyboardLabel.resizeText();
+				
+			}
+			
 			if(showingStatsMenu)
 			{
 				for(int i=0;i<33;i++)
@@ -1797,6 +1866,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				createdBy.resizeText();
 				backButton.resizeText();
 			}
+			
 		}
 		this.repaint();
 	}

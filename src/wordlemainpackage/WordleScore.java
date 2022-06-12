@@ -177,16 +177,16 @@ public class WordleScore {
 	public CharAmount[] getMostGuessed()
 	{
 		
-		CharAmount mostAskedList[] = new CharAmount[26];
+		CharAmount mostGuessedList[] = new CharAmount[26];
 	
 		for(int i=0;i<26;i++)
 		{
-			mostAskedList[i] = new CharAmount(((char)(i+65))+"",guessedCharactersAmount[i]);
+			mostGuessedList[i] = new CharAmount(((char)(i+65))+"",guessedCharactersAmount[i]);
 		}
 		
-		Arrays.sort(mostAskedList, Collections.reverseOrder());
+		Arrays.sort(mostGuessedList, Collections.reverseOrder());
 		
-		return mostAskedList;
+		return mostGuessedList;
 	}
 	
 	public CharAmount[] getMostAsked()

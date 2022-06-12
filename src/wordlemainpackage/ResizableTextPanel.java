@@ -65,7 +65,7 @@ public class ResizableTextPanel {
 		}
 		
 		int prefferedStringWidth = label.getFontMetrics(labelFont).stringWidth(tempString);
-		int actualStringWidth = label.getFontMetrics(labelFont).stringWidth(labelText)+5;
+		int actualStringWidth = label.getFontMetrics(labelFont).stringWidth(labelText);
 		int stringWidth = Math.max(actualStringWidth, prefferedStringWidth);
 		int componentWidth = label.getWidth()-horizontalInset;
 

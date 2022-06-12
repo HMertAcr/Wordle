@@ -22,6 +22,7 @@ public class ResizableButton extends JButton
 		super.setContentAreaFilled(false);
 		pressedBackgroundColor = this.getBackground();
 		hoverBackgroundColor = this.getBackground();
+		prefferedSize = 0;
 	}
 	
 	
@@ -44,34 +45,48 @@ public class ResizableButton extends JButton
 	
     @Override
     protected void paintComponent(Graphics g) {
-        if (getModel().isPressed()) {
+        if (getModel().isPressed())
+        {
             g.setColor(pressedBackgroundColor);
-        } else if (getModel().isRollover()) {
-            g.setColor(hoverBackgroundColor);
-        } else {
-            g.setColor(getBackground());
+        }
+        else
+        {
+            if (getModel().isRollover())
+            {
+                g.setColor(hoverBackgroundColor);
+            }
+            else
+            {
+                g.setColor(getBackground());
+            }
         }
         g.fillRect(0, 0, getWidth(), getHeight());
         super.paintComponent(g);
     }
 
     @Override
-    public void setContentAreaFilled(boolean b) {
+    public void setContentAreaFilled(boolean b)
+    {
+    	/**/
     }
 
-    public Color getHoverBackgroundColor() {
+    public Color getHoverBackgroundColor()
+    {
         return hoverBackgroundColor;
     }
 
-    public void setHoverBackgroundColor(Color hoverBackgroundColor) {
+    public void setHoverBackgroundColor(Color hoverBackgroundColor)
+    {
         this.hoverBackgroundColor = hoverBackgroundColor;
     }
 
-    public Color getPressedBackgroundColor() {
+    public Color getPressedBackgroundColor()
+    {
         return pressedBackgroundColor;
     }
 
-    public void setPressedBackgroundColor(Color pressedBackgroundColor) {
+    public void setPressedBackgroundColor(Color pressedBackgroundColor)
+    {
         this.pressedBackgroundColor = pressedBackgroundColor;
     }
 	
@@ -92,11 +107,11 @@ public class ResizableButton extends JButton
 		}
 		else
 		{
-			tempString=this.getText();
+			tempString = this.getText();
 		}
 		
 		int prefferedStringWidth = this.getFontMetrics(labelFont).stringWidth(tempString);
-		int actualStringWidth = this.getFontMetrics(labelFont).stringWidth(this.getText())+5;
+		int actualStringWidth = this.getFontMetrics(labelFont).stringWidth(this.getText());
 		int stringWidth = Math.max(actualStringWidth, prefferedStringWidth);
 		int componentWidth = this.getWidth()-horizontalInSet;
 
