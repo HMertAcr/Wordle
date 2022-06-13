@@ -43,6 +43,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	ResizableTextPanel enterPlayerNamesLabel;
 	ResizableTextPanel enterIfKeyboardLabel;
 	Timer timer;
+	Timer frameTimer[];
 	int secondsPassed;
 	int positionInWord[];
 	int enteredCharactersInWord[];
@@ -75,6 +76,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	ScoreEntry highscores[];
 	CharAmount mostGuessedCharacters[];
 	CharAmount mostAskedCharacters[];
+	boolean animating[];
+	int animationFrame[];
+	boolean animationFinished[];
+	boolean allAnimationsFinished;
 	int topInset;
 	int leftInset;
 	
@@ -1024,6 +1029,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			calculateFinishFontSize(focusedOn-1,"You Won!",finalScore[focusedOn-1]);
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
+						startAnimating(focusedOn-1);
             			
     					allFinished = true;
     					
@@ -1085,6 +1091,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			calculateFinishFontSize(focusedOn-1,"You Won!",finalScore[focusedOn-1]);
             			gameWon[focusedOn-1]=true;
             			score.playerFinishedGame(focusedOn-1);
+						startAnimating(focusedOn-1);
             			
             			allFinished = true;
             			
@@ -1111,7 +1118,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
             			calculateFinishFontSize(focusedOn-1,"You Lost!",finalScore[focusedOn-1]);
             			gameWon[focusedOn-1]=false;
             			score.playerFinishedGame(focusedOn-1);
-            			
+						startAnimating(focusedOn-1);
             			
             			allFinished = true;
             			
@@ -1360,7 +1367,59 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		g2.drawString("EXIT", exitCordinates[4], exitCordinates[5]);
 		
 	}
+
+	public void startAnimating(int player)
+	{
+		animating[player] = true;
+		frameTimer[player] = new Timer(25, this);
+		repaint();
+		frameTimer[player].start();
+	}
 	
+	public void drawAnimation(int player,Graphics g)
+	{
+		Graphics2D g2 = (Graphics2D)g;
+
+		int WordleAreaX = wordleQuestionArea[player].getX()+leftInset;
+		int WordleAreaY = wordleQuestionArea[player].getY()+topInset;
+		int wordleareaWidth = wordleQuestionArea[player].getWidth();
+		int WordleAreaHeight = wordleQuestionArea[player].getHeight();
+
+		int animationFrameX = (int) (WordleAreaX + (((wordleareaWidth/100.0) * animationFrame[player])/2.0));
+		int animationFrameY = (int) (WordleAreaY + (((WordleAreaHeight/100.0) * animationFrame[player])/2.0));
+		int animationFrameWidth = (int) (wordleareaWidth - ((wordleareaWidth/100.0) * animationFrame[player]));
+		int animationFrameHeight = (int) (WordleAreaHeight - ((WordleAreaHeight/100.0) * animationFrame[player]));
+
+		if(animationFrameWidth > 0 || animationFrameHeight > 0)
+		{
+
+			g2.setColor(new Color(220,30,30));
+			g2.setStroke(new BasicStroke(10));
+			g2.drawRect(animationFrameX, animationFrameY, animationFrameWidth, animationFrameHeight);
+			
+		}
+		else
+		{
+			frameTimer[player].stop();
+			animating[player] = false;
+			animationFinished[player] = true;
+			animationFrame[player] = 0;
+
+			allAnimationsFinished = true;
+
+			for(int i=0;i<animationFinished.length;i++)
+			{
+				if(!animationFinished[i])
+				{
+					allAnimationsFinished=false;
+				}
+			}
+
+			repaint();
+		}
+
+	}
+
 	@Override
 	public void paint(Graphics g)
 	{
@@ -1376,7 +1435,11 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 			for(int i=0;i<playerAmount;i++)
 			{
-				if(gameFinished[i])
+				if(animating[i])
+				{
+					drawAnimation(i,g);
+				}
+				if(animationFinished[i])
 				{
 					if(gameWon[i])
 					{
@@ -1389,7 +1452,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				}
 			}
 			
-			if(allFinished)
+			if(allAnimationsFinished)
 			{
 				drawExitButton(true,g);
 			}
@@ -1418,7 +1481,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					
 					gameStarted = true;
 					allFinished = false;
-					
+					allAnimationsFinished = false;
+
 					secondsPassed = 0;
 					focusedOn = 1;
 					
@@ -1429,7 +1493,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					draggingY = 0;
 					
 					exitCordinates = new int[]{0,0,0,0,0,0};
-					
+
+					frameTimer = new Timer[playerAmount];
+
 					if(playerAmount==1)
 					{
 						
@@ -1444,7 +1510,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						pressedOnQuestionArea = new boolean[]{false};
 						messageCordinates = new int[][]{{0,0}};
 						scoreCordinates = new int[][]{{0,0}};
-						
+						animating = new boolean[]{false};
+						animationFrame = new int[]{0};
+						animationFinished = new boolean[]{false};
+
 						score.setNewPlayers(1,playerNames,correctAnswer);
 						
 						if(addKeyboard)
@@ -1471,7 +1540,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 						pressedOnQuestionArea = new boolean[]{false,false};
 						messageCordinates = new int[][]{{0,0},{0,0}};
 						scoreCordinates = new int[][]{{0,0},{0,0}};
-						
+						animating = new boolean[]{false,false};
+						animationFrame = new int[]{0,0};
+						animationFinished = new boolean[]{false,false};
+
 						score.setNewPlayers(2,playerNames,correctAnswer);
 						
 						if(addKeyboard)
@@ -1522,6 +1594,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					}
 				}
 			}
+			return;
 		}
 		
 		if(event.getSource() == openStatsButton)
@@ -1532,6 +1605,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			mostAskedCharacters = score.getMostAsked();
 			mostGuessedCharacters = score.getMostGuessed();
 			startStats();
+			return;
 		}
 		
 		if(event.getSource() == backButton)
@@ -1541,7 +1615,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			
 			this.remove(statsMenu);
 			startMenu();
-			
+			return;
 		}
 		
 		if(event.getSource() == onePlayerButton)
@@ -1552,6 +1626,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				playerTwoNameField.setText("");
 				playerTwoNameField.setEnabled(false);
 			}
+			return;
 		}
 		
 		if(event.getSource() == twoPlayerButton)
@@ -1561,6 +1636,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				playerAmount=2;
 				playerTwoNameField.setEnabled(true);
 			}
+			return;
 		}
 		
 		if(event.getSource() == addKeyboardYESButton)
@@ -1569,6 +1645,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			{
 				addKeyboard=true;
 			}
+			return;
 		}
 		
 		if(event.getSource() == addKeyboardNOButton)
@@ -1577,6 +1654,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			{
 				addKeyboard=false;				
 			}
+			return;
 		}
 		
 		if(event.getSource() == timer)
@@ -1626,7 +1704,26 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					
 				}				
 			}
-		}		
+			return;
+		}
+
+		if(gameStarted)
+		{
+			if(event.getSource() == frameTimer[0])
+			{
+				animationFrame[0]++;
+				repaint();
+			}
+	
+			if(playerAmount==2)
+			{
+				if(event.getSource() == frameTimer[1])
+				{
+					animationFrame[1]++;
+					repaint();
+				}
+			}
+		}
 	}
 
 	public void keyPressed(KeyEvent event)
