@@ -1681,9 +1681,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 		int clickedX = e.getX()-leftInset;
 		int clickedY = e.getY()-topInset;
-		
-		//this is windows specific and maybe my computer specific
-		
+				
 		if(gameStarted)
 		{
 			if(playerAmount>1)
@@ -1757,9 +1755,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 
 		int clickedX = e.getX()-leftInset;
 		int clickedY = e.getY()-topInset;
-		
-		//this is windows specific and maybe my computer specific
-		
+				
 		if(gameStarted)
 		{
 			if(draggingKeyboardBox)
