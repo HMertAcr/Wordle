@@ -84,41 +84,48 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		this.wordleScoreFileLocation = wordleScoreFileLocation;
 		
 		dictionary = new WordleDictionary(this.dictionaryFileLocation);
-		score = new WordleScore(wordleScoreFileLocation);
+		if(dictionary.dictionaryFound)
+		{
+			score = new WordleScore(wordleScoreFileLocation);
 		
-		gameStarted = false;
-		showingStatsMenu = false;
-
-		
-		this.setVisible(true);
-		
-		this.setMinimumSize(new Dimension(450,325));
-		this.setSize(new Dimension(500,350));
-		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
-				
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Wordle");
-		
-        this.addKeyListener(this);
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
-        this.addComponentListener(this);
-        this.setFocusable(true);
-        this.requestFocus();
-		
-		this.setLayout(new GridLayout(1,1));
-		this.setBackground(new Color(60,60,60));
-		
-		this.getContentPane().setBackground(new Color(60,60,60));
-
-		Insets insets = this.getInsets();
-		leftInset = insets.left;
-		topInset = insets.top;
-
-		startMenu();
-		
+			gameStarted = false;
+			showingStatsMenu = false;
+	
+			
+			this.setVisible(true);
+			
+			this.setMinimumSize(new Dimension(450,325));
+			this.setSize(new Dimension(500,350));
+			
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation((int)(screenSize.getWidth() - this.getSize().getWidth())/2, (int)(screenSize.getHeight() - this.getSize().getHeight())/2);
+					
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			this.setTitle("Wordle");
+			
+			this.addKeyListener(this);
+			this.addMouseListener(this);
+			this.addMouseMotionListener(this);
+			this.addComponentListener(this);
+			this.setFocusable(true);
+			this.requestFocus();
+			
+			this.setLayout(new GridLayout(1,1));
+			this.setBackground(new Color(60,60,60));
+			
+			this.getContentPane().setBackground(new Color(60,60,60));
+	
+			Insets insets = this.getInsets();
+			leftInset = insets.left;
+			topInset = insets.top;
+	
+			startMenu();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this, "Could not find dictionary file", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
 	}
 
 	public void startMenu()

@@ -8,6 +8,7 @@ public class WordleDictionary
 	
 	public
 	ArrayList<String> Dictionary;
+	boolean dictionaryFound;
 	
 	public WordleDictionary(String fileLocation)
 	{
@@ -24,11 +25,13 @@ public class WordleDictionary
 	            Dictionary.add(line.toUpperCase());
 	        }
             reader.close();
+
+			dictionaryFound = true;
+
 	    }
         catch (FileNotFoundException e)
 	    {
-            System.out.println("FileNotFound");
-            e.printStackTrace();
+			dictionaryFound = false;
 	    }
     }
 	
