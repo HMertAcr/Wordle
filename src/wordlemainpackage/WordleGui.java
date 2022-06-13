@@ -1385,12 +1385,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		int wordleareaWidth = wordleQuestionArea[player].getWidth();
 		int WordleAreaHeight = wordleQuestionArea[player].getHeight();
 
-		int animationFrameX = (int) (WordleAreaX + (((wordleareaWidth/100.0) * animationFrame[player])/2.0));
-		int animationFrameY = (int) (WordleAreaY + (((WordleAreaHeight/100.0) * animationFrame[player])/2.0));
-		int animationFrameWidth = (int) (wordleareaWidth - ((wordleareaWidth/100.0) * animationFrame[player]));
-		int animationFrameHeight = (int) (WordleAreaHeight - ((WordleAreaHeight/100.0) * animationFrame[player]));
+		int animationFrameX = (int) (WordleAreaX + (((wordleareaWidth/75.0) * animationFrame[player])/2.0));
+		int animationFrameY = (int) (WordleAreaY + (((WordleAreaHeight/75.0) * animationFrame[player])/2.0));
+		int animationFrameWidth = (int) (wordleareaWidth - ((wordleareaWidth/75.0) * animationFrame[player]));
+		int animationFrameHeight = (int) (WordleAreaHeight - ((WordleAreaHeight/75.0) * animationFrame[player]));
 
-		if(animationFrameWidth > 0 || animationFrameHeight > 0)
+		if(animationFrameWidth > 25 || animationFrameHeight > 25)
 		{
 
 			g2.setColor(new Color(220,30,30));
@@ -1433,13 +1433,21 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				drawDraggedKeyboard(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
 			}
 			
+			boolean animatingAny = false;
+
+
 			for(int i=0;i<playerAmount;i++)
 			{
 				if(animating[i])
 				{
 					drawAnimation(i,g);
+					animatingAny=true;
 				}
-				if(animationFinished[i])
+			}
+
+			if(!animatingAny)
+			{
+				for(int i=0;i<playerAmount;i++)
 				{
 					if(gameWon[i])
 					{
@@ -1451,7 +1459,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 					}
 				}
 			}
-			
+
 			if(allAnimationsFinished)
 			{
 				drawExitButton(true,g);
