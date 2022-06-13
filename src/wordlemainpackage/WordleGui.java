@@ -75,6 +75,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	ScoreEntry highscores[];
 	CharAmount mostGuessedCharacters[];
 	CharAmount mostAskedCharacters[];
+	int topInset;
+	int leftInset;
 	
 	public WordleGui(String dictionaryFileLocation, String wordleScoreFileLocation)
 	{
@@ -110,6 +112,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		this.setBackground(new Color(60,60,60));
 		
 		this.getContentPane().setBackground(new Color(60,60,60));
+
+		Insets insets = this.getInsets();
+		leftInset = insets.left;
+		topInset = insets.top;
 
 		startMenu();
 		
@@ -1217,8 +1223,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		String score = String.format("Score: %04d", scoreValue);
 		
-		int areaX = wordleQuestionArea[player].getX()+7;
-		int areaY = wordleQuestionArea[player].getY()+32;
+		int areaX = wordleQuestionArea[player].getX()+leftInset;
+		int areaY = wordleQuestionArea[player].getY()+topInset;
 		
 		int areaWidth = wordleQuestionArea[player].getWidth();
 		int areaHeight = wordleQuestionArea[player].getHeight();
@@ -1295,8 +1301,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public void calculateExitButtonCordinates()
 	{
 		
-		int WordleAreaX = wordleQuestionArea[0].getX()+7;
-		int WordleAreaY = wordleQuestionArea[0].getY()+32;
+		int WordleAreaX = wordleQuestionArea[0].getX()+leftInset;
+		int WordleAreaY = wordleQuestionArea[0].getY()+topInset;
 		int WordleAreaHeight = wordleQuestionArea[0].getHeight();
 		int frameWidth = this.getWidth();
 
@@ -1673,11 +1679,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public void mousePressed(MouseEvent e)
 	{		
 
-		int clickedX = e.getX()-7;
-		int clickedY = e.getY()-32;
-		
-		//this is windows specific and maybe my computer specific
-		
+		int clickedX = e.getX()-leftInset;
+		int clickedY = e.getY()-topInset;
+				
 		if(gameStarted)
 		{
 			if(playerAmount>1)
@@ -1749,11 +1753,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public void mouseReleased(MouseEvent e)
 	{
 
-		int clickedX = e.getX()-7;
-		int clickedY = e.getY()-32;
-		
-		//this is windows specific and maybe my computer specific
-		
+		int clickedX = e.getX()-leftInset;
+		int clickedY = e.getY()-topInset;
+				
 		if(gameStarted)
 		{
 			if(draggingKeyboardBox)
