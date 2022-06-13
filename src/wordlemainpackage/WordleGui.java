@@ -80,6 +80,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	int animationFrame[];
 	boolean animationFinished[];
 	boolean allAnimationsFinished;
+	boolean animatingAny;
 	int topInset;
 	int leftInset;
 	
@@ -1204,30 +1205,39 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	
 	public void drawDraggedKeyboard(KeyboardBox buttonToDraw, int x, int y, Graphics g)
 	{
+		if(!allFinished)
+		{
+	
+			Graphics2D g2 = (Graphics2D)g;
 		
-		Graphics2D g2 = (Graphics2D)g;
-		
-	    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-	    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-		
-		int buttonWidth = buttonToDraw.KeyboardBoxPanel.getWidth();
-		int buttonHeight = buttonToDraw.KeyboardBoxPanel.getHeight();
-		Color buttonColor = buttonToDraw.KeyboardBoxPanel.getBackground();
-		
-		Color labelColor = buttonToDraw.charLabel.getForeground();
-		String labelText = buttonToDraw.charLabel.getText();
-		Font labelFont = buttonToDraw.charLabel.getFont();
-		FontMetrics metrics = buttonToDraw.charLabel.getFontMetrics(labelFont);
-		int labelWidth = metrics.stringWidth(labelText);
-		int labelHeight = metrics.getHeight();
-		int labelAscent = metrics.getAscent();
-		
-		g2.setColor(buttonColor);
-		g2.fillRect(x, y, buttonWidth, buttonHeight);
-		
-		g2.setColor(labelColor);
-		g2.setFont(labelFont);
-		g2.drawString(labelText, x + (buttonWidth - labelWidth)/2, y + (buttonHeight - labelHeight)/2 + labelAscent);
+			g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+			
+			int buttonWidth = buttonToDraw.KeyboardBoxPanel.getWidth();
+			int buttonHeight = buttonToDraw.KeyboardBoxPanel.getHeight();
+			Color buttonColor = buttonToDraw.KeyboardBoxPanel.getBackground();
+			
+			Color labelColor = buttonToDraw.charLabel.getForeground();
+			String labelText = buttonToDraw.charLabel.getText();
+			Font labelFont = buttonToDraw.charLabel.getFont();
+			FontMetrics metrics = buttonToDraw.charLabel.getFontMetrics(labelFont);
+			int labelWidth = metrics.stringWidth(labelText);
+			int labelHeight = metrics.getHeight();
+			int labelAscent = metrics.getAscent();
+			
+			g2.setColor(buttonColor);
+			g2.fillRect(x, y, buttonWidth, buttonHeight);
+			
+			g2.setColor(labelColor);
+			g2.setFont(labelFont);
+			g2.drawString(labelText, x + (buttonWidth - labelWidth)/2, y + (buttonHeight - labelHeight)/2 + labelAscent);
+		}
+		else
+		{
+			draggingKeyboardBox = false;
+			repaint();
+		}
+
 		
 	}
 	
@@ -1371,6 +1381,17 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	public void startAnimating(int player)
 	{
 		animating[player] = true;
+
+		animatingAny = false;
+
+		for(int i=0;i<playerAmount;i++)
+		{
+			if(animating[i])
+			{
+				animatingAny=true;
+			}
+		}
+
 		frameTimer[player] = new Timer(25, this);
 		repaint();
 		frameTimer[player].start();
@@ -1415,6 +1436,16 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				}
 			}
 
+			animatingAny = false;
+
+			for(int i=0;i<playerAmount;i++)
+			{
+				if(animating[i])
+				{
+					animatingAny=true;
+				}
+			}
+
 			repaint();
 		}
 
@@ -1432,16 +1463,12 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			{
 				drawDraggedKeyboard(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
 			}
-			
-			boolean animatingAny = false;
-
 
 			for(int i=0;i<playerAmount;i++)
 			{
 				if(animating[i])
 				{
 					drawAnimation(i,g);
-					animatingAny=true;
 				}
 			}
 
@@ -2036,15 +2063,19 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		if(pressedOnKeyboardBox)
+		if(!allFinished)
 		{
-			
-			draggingKeyboardBox = true;
-			draggingX = e.getX();
-			draggingY = e.getY();
-			repaint();
-			
+			if(pressedOnKeyboardBox)
+			{
+				
+				draggingKeyboardBox = true;
+				draggingX = e.getX();
+				draggingY = e.getY();
+				repaint();
+				
+			}
 		}
+
 	}
 
 	@Override
