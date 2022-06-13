@@ -1286,7 +1286,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 		if(antialiass)
 		{
-		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
+		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 		else
@@ -1336,11 +1336,22 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		
 	}
 	
-	public void drawExitButton(Graphics g)
+	public void drawExitButton(boolean antialiass, Graphics g)
 	{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
+		if(antialiass)
+		{
+		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		}
+		else
+		{
+		    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+		    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		}
+
 		g2.setColor(new Color(220,30,30));
 		g2.fillRect(exitCordinates[0], exitCordinates[1], exitCordinates[2], exitCordinates[3]);
 		
@@ -1363,25 +1374,24 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				drawDraggedKeyboard(draggedKeyboardBox, draggingX-draggingXOffset, draggingY-draggingYOffset, g);
 			}
 			
-			
 			for(int i=0;i<playerAmount;i++)
 			{
 				if(gameFinished[i])
 				{
 					if(gameWon[i])
 					{
-						displayStatus(i,"You Won!",finalScore[i],false,g);
+						displayStatus(i,"You Won!",finalScore[i],allFinished,g);
 					}
 					else
 					{
-						displayStatus(i,"You Lost!",finalScore[i],false,g);
+						displayStatus(i,"You Lost!",finalScore[i],allFinished,g);
 					}
 				}
 			}
 			
 			if(allFinished)
 			{
-				drawExitButton(g);
+				drawExitButton(true,g);
 			}
 		}
 	}
