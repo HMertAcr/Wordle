@@ -1392,7 +1392,7 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 			}
 		}
 
-		frameTimer[player] = new Timer(25, this);
+		frameTimer[player] = new Timer(50, this);
 		repaint();
 		frameTimer[player].start();
 	}
@@ -1406,10 +1406,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		int wordleareaWidth = wordleQuestionArea[player].getWidth();
 		int WordleAreaHeight = wordleQuestionArea[player].getHeight();
 
-		int animationFrameX = (int) (WordleAreaX + (((wordleareaWidth/50.0) * animationFrame[player])/2.0));
-		int animationFrameY = (int) (WordleAreaY + (((WordleAreaHeight/50.0) * animationFrame[player])/2.0));
-		int animationFrameWidth = (int) (wordleareaWidth - ((wordleareaWidth/50.0) * animationFrame[player]));
-		int animationFrameHeight = (int) (WordleAreaHeight - ((WordleAreaHeight/50.0) * animationFrame[player]));
+		int animationFrameX = (int) (WordleAreaX + (((wordleareaWidth/25.0) * animationFrame[player])/2.0));
+		int animationFrameY = (int) (WordleAreaY + (((WordleAreaHeight/25.0) * animationFrame[player])/2.0));
+		int animationFrameWidth = (int) (wordleareaWidth - ((wordleareaWidth/25.0) * animationFrame[player]));
+		int animationFrameHeight = (int) (WordleAreaHeight - ((WordleAreaHeight/25.0) * animationFrame[player]));
 
 		if(animationFrameWidth > 20 || animationFrameHeight > 20)
 		{
@@ -1446,7 +1446,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 				}
 			}
 
-			repaint();
 		}
 
 	}
