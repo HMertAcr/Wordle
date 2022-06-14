@@ -176,6 +176,9 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		startGameButton.setForeground(Color.white);
 		openStatsButton.setForeground(Color.white);
 		
+		openStatsButton.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(60,60,60)));
+        startGameButton.setBorder(BorderFactory.createMatteBorder(2,2,2,2,new Color(60,60,60)));
+		
 		onePlayerButton = new JRadioButton();
 		twoPlayerButton = new JRadioButton();
 		
