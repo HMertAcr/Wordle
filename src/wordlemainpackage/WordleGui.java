@@ -956,7 +956,6 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		gameStarted=false;
 		this.remove(wordleGameArea);
 		startMenu();
-		repaint();
 	}
 	
 	public void changeFocus(int newFocus)
@@ -967,7 +966,8 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
 		if(!gameFinished[focusedOn-1])
 		{
 			wordArea[numOfTries[focusedOn-1]][positionInWord[focusedOn-1]][focusedOn-1].highlight();
-			if(addKeyboard) {
+			if(addKeyboard)
+			{
 				for(int i=0;i<28;i++)
 				{
 					keyboardKeys[i].changeKeyboard(newFocus);
@@ -1014,12 +1014,10 @@ public class WordleGui extends JFrame implements ActionListener, KeyListener, Mo
     				wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].checkCorrectness(i, correctAnswer[focusedOn-1]);
         			if(addKeyboard)
         			{
-            				keyboardKeys[(wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].getText().charAt(0))-65].changeColor(wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].charBoxPanel.getBackground(),focusedOn);
+            			keyboardKeys[(wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].getText().charAt(0))-65].changeColor(wordArea[numOfTries[focusedOn-1]][i][focusedOn-1].charBoxPanel.getBackground(),focusedOn);
         			}
     				
     			}
-    			
-
     			
         		if(numOfTries[focusedOn-1]<4)
         		{
